@@ -131,3 +131,5 @@ dmypy.json
 # bat
 *.bat
 .idea/
+
+.DS_Store

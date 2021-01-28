@@ -39,7 +39,7 @@ def get_args():
 
 
 def main():
-    # 引数解析 #################################################################
+    # Argument parsing #################################################################
     args = get_args()
 
     cap_device = args.device
@@ -52,12 +52,12 @@ def main():
 
     use_brect = True
 
-    # カメラ準備 ###############################################################
+    # Camera preparation ###############################################################
     cap = cv.VideoCapture(cap_device)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
 
-    # モデルロード #############################################################
+    # Model load #############################################################
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(
         static_image_mode=use_static_image_mode,
@@ -127,7 +127,7 @@ def main():
                                                   results.multi_handedness):
                 # Bounding box calculation
                 brect = calc_bounding_rect(debug_image, hand_landmarks)
-                # ランドマークの計算
+                # Landmark calculation
                 landmark_list = calc_landmark_list(debug_image, hand_landmarks)
 
                 # Conversion to relative coordinates / normalized coordinates
@@ -141,8 +141,8 @@ def main():
 
                 # Hand sign classification
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
-                if hand_sign_id == 2:  # 指差しサイン
-                    point_history.append(landmark_list[8])  # 人差指座標
+                if hand_sign_id == 2:  # Point gesture
+                    point_history.append(landmark_list[8])
                 else:
                     point_history.append([0, 0])
 
@@ -153,7 +153,7 @@ def main():
                     finger_gesture_id = point_history_classifier(
                         pre_processed_point_history_list)
 
-                # 直近検出の中で最多のジェスチャーIDを算出
+                # Calculates the gesture IDs in the latest detection
                 finger_gesture_history.append(finger_gesture_id)
                 most_common_fg_id = Counter(
                     finger_gesture_history).most_common()
@@ -260,7 +260,7 @@ def pre_process_point_history(image, point_history):
 
     temp_point_history = copy.deepcopy(point_history)
 
-    # 相対座標に変換
+    # Convert to relative coordinates
     base_x, base_y = 0, 0
     for index, point in enumerate(temp_point_history):
         if index == 0:
@@ -271,7 +271,7 @@ def pre_process_point_history(image, point_history):
         temp_point_history[index][1] = (temp_point_history[index][1] -
                                         base_y) / image_height
 
-    # 1次元リストに変換
+    # Convert to a one-dimensional list
     temp_point_history = list(
         itertools.chain.from_iterable(temp_point_history))
 
@@ -295,9 +295,8 @@ def logging_csv(number, mode, landmark_list, point_history_list):
 
 
 def draw_landmarks(image, landmark_point):
-    # 接続線
     if len(landmark_point) > 0:
-        # 親指
+        # Thumb
         cv.line(image, tuple(landmark_point[2]), tuple(landmark_point[3]),
                 (0, 0, 0), 6)
         cv.line(image, tuple(landmark_point[2]), tuple(landmark_point[3]),
@@ -307,7 +306,7 @@ def draw_landmarks(image, landmark_point):
         cv.line(image, tuple(landmark_point[3]), tuple(landmark_point[4]),
                 (255, 255, 255), 2)
 
-        # 人差指
+        # Index finger
         cv.line(image, tuple(landmark_point[5]), tuple(landmark_point[6]),
                 (0, 0, 0), 6)
         cv.line(image, tuple(landmark_point[5]), tuple(landmark_point[6]),
@@ -321,7 +320,7 @@ def draw_landmarks(image, landmark_point):
         cv.line(image, tuple(landmark_point[7]), tuple(landmark_point[8]),
                 (255, 255, 255), 2)
 
-        # 中指
+        # Middle finger
         cv.line(image, tuple(landmark_point[9]), tuple(landmark_point[10]),
                 (0, 0, 0), 6)
         cv.line(image, tuple(landmark_point[9]), tuple(landmark_point[10]),
@@ -335,7 +334,7 @@ def draw_landmarks(image, landmark_point):
         cv.line(image, tuple(landmark_point[11]), tuple(landmark_point[12]),
                 (255, 255, 255), 2)
 
-        # 薬指
+        # Ring finger
         cv.line(image, tuple(landmark_point[13]), tuple(landmark_point[14]),
                 (0, 0, 0), 6)
         cv.line(image, tuple(landmark_point[13]), tuple(landmark_point[14]),
@@ -349,7 +348,7 @@ def draw_landmarks(image, landmark_point):
         cv.line(image, tuple(landmark_point[15]), tuple(landmark_point[16]),
                 (255, 255, 255), 2)
 
-        # 小指
+        # Little finger
         cv.line(image, tuple(landmark_point[17]), tuple(landmark_point[18]),
                 (0, 0, 0), 6)
         cv.line(image, tuple(landmark_point[17]), tuple(landmark_point[18]),
@@ -363,7 +362,7 @@ def draw_landmarks(image, landmark_point):
         cv.line(image, tuple(landmark_point[19]), tuple(landmark_point[20]),
                 (255, 255, 255), 2)
 
-        # 手の平
+        # Palm
         cv.line(image, tuple(landmark_point[0]), tuple(landmark_point[1]),
                 (0, 0, 0), 6)
         cv.line(image, tuple(landmark_point[0]), tuple(landmark_point[1]),
@@ -393,7 +392,7 @@ def draw_landmarks(image, landmark_point):
         cv.line(image, tuple(landmark_point[17]), tuple(landmark_point[0]),
                 (255, 255, 255), 2)
 
-    # キーポイント
+    # Key Points
     for index, landmark in enumerate(landmark_point):
         if index == 0:  # 手首1
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
@@ -485,7 +484,7 @@ def draw_landmarks(image, landmark_point):
 
 def draw_bounding_rect(use_brect, image, brect):
     if use_brect:
-        # 外接矩形
+        # Outer rectangle
         cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[3]),
                      (0, 0, 0), 1)
 
