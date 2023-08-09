@@ -96,3 +96,9 @@ def erase(pos, radius=15):
                 p[0] = None
                 p[1] = None
                 grid[g[0]][g[1]].remove(p)
+
+
+def clear():
+    global history, grid
+    history = []
+    grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]

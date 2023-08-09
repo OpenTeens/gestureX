@@ -8,8 +8,11 @@ PLUGINS:
 
 
 PLUGIN USAGE:
-- press 'p' to switch to the pen (from plugin.blackboard)
-- press 'e' to switch to the eraser (from plugin.blackboard)
+- plugin.blackboard
+   - press 'p' to switch to the pen
+   - press 'e' to switch to the eraser
+   - press 'c' to clear the board
+
 """
 
 import csv
@@ -137,6 +140,8 @@ def main():
             blackboard_fn = plugin.blackboard.pen
         if key == 101:  # e for eraser
             blackboard_fn = plugin.blackboard.erase
+        if key == 99:  # c for clear
+            plugin.blackboard.clear()
         number, mode = select_mode(key, mode)
 
         # 相机捕获 #####################################################
