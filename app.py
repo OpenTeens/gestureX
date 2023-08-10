@@ -41,7 +41,9 @@ import plugin.keyboard
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
 plugin.mouse.disable(True)  # disable mouse plugin
-plugin.keyboard.disable(True)  # disable keyboard plugin
+
+
+# plugin.keyboard.disable(True)  # disable keyboard plugin
 
 
 def get_args():
@@ -172,7 +174,7 @@ def main():
 
                 # plugin
                 blackboard_fn(landmark_list[8])  # finger No.8
-                plugin.keyboard.keyboard_loop(landmark_list[8])
+                clicked_key = plugin.keyboard.check_on_keys(landmark_list[8])
 
                 # 转换为相对坐标 & 归一化
                 pre_processed_landmark_list = pre_process_landmark(landmark_list)
@@ -190,12 +192,17 @@ def main():
 
                 if hand_sign_id == 4:  # 4: click
                     plugin.mouse.mouse_press()
-                    if blackboard_fn == plugin.blackboard.none:
+
+                    if clicked_key:
+                        plugin.keyboard.press(clicked_key)
+
+                    if blackboard_fn is plugin.blackboard.none:
                         blackboard_fn = blackboard_fn_backup
                 else:
                     blackboard_fn = plugin.blackboard.none
                     if len(plugin.blackboard.history) != 0 and plugin.blackboard.history[-1][0] is not None:
                         plugin.blackboard.history.append([None, None])  # 断开
+                    plugin.keyboard.release()
 
                 # 手指手势分类
                 finger_gesture_id = 0
@@ -224,9 +231,8 @@ def main():
             point_history.append([0, 0])
             # plugin.blackboard.pen([None, None])  # -1 represents all.
 
-       
         debug_image = draw_info(debug_image, fps, mode, number)
-        plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
+        plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.print_history(debug_image)
 
         if plugin.mouse.disabled is False:
@@ -436,7 +442,7 @@ def draw_landmarks(image, landmark_point):
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255), -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
         if index == 8:  # 食指：指尖
-            if blackboard_fn == plugin.blackboard.erase:
+            if blackboard_fn is plugin.blackboard.erase:
                 cv.circle(image, (landmark[0], landmark[1]), 15, (225, 255, 225), 2)
             else:
                 cv.circle(image, (landmark[0], landmark[1]), 8, (255, 255, 255), -1)
