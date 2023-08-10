@@ -182,6 +182,8 @@ def main():
 
                 # 手势分类
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
+                #if(300 < landmark_list[8][0] < 1000 and 40 < landmark_list[8][1] < 400):
+                #    plugin.mouse.move_to(landmark_list[8])
                 plugin.mouse.move_to(landmark_list[8])
                 if(hand_sign_id==4):
                     plugin.mouse.mouse_press()
@@ -221,9 +223,11 @@ def main():
         debug_image = draw_info(debug_image, fps, mode, number)
         debug_image = plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
 
+        if(plugin.mouse.disabled == False):
+            cv.rectangle(debug_image, (300, 40), (1000, 400), (0, 255, 0), 2)
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
-
+        
     cap.release()
     cv.destroyAllWindows()
 
