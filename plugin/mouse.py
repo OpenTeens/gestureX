@@ -26,13 +26,15 @@ def move_to(tp: tuple, photo_width=960, photo_height=540):
     def helper():
         x, y = tp
 
+        screen_width, screen_height = pyautogui.size()
+
         # 自稳定系统
         global last
         if (x - last[0]) ** 2 + (y - last[1]) ** 2 <= 10 ** 2:
             return
 
         last = [x, y]
-        screen_width, screen_height = pyautogui.size()
+        
         # 读取屏幕尺寸
         ratio_x, ratio_y = screen_width / photo_width, screen_height / photo_height
         # 变换摄像头坐标到屏幕坐标
@@ -51,6 +53,5 @@ def mouse_press():
 
     if disabled:
         return "DISABLED"
-    pyautogui.mouseDown()
-    pyautogui.sleep(0.5)
+    pyautogui.mouseDown() 
     pyautogui.mouseUp()
