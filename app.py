@@ -39,7 +39,7 @@ import plugin.blackboard
 import plugin.mouse
 import plugin.keyboard
 
-blackboard_fn = plugin.blackboard.pen
+blackboard_fn = lambda x: None
 
 # Doesn't work:
 # isPressedB = keyboard.is_pressed('b')
@@ -194,6 +194,7 @@ def main():
 
                 # plugin
                 blackboard_fn(landmark_list[8])  # finger No.8
+                plugin.keyboard.keyboard_loop(landmark_list[8])
 
                 # 转换为相对坐标 & 归一化
                 pre_processed_landmark_list = pre_process_landmark(landmark_list)
