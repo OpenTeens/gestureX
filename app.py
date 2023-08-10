@@ -4,7 +4,7 @@
 """
 PLUGINS:
 - blackboard ................. enabled
-- mouse ...................... disabled
+- mouse ...................... enabled
 - keyboard ................... disabled
 
 
@@ -16,7 +16,6 @@ PLUGIN USAGE:
 
 """
 
-import keyboard
 import csv
 import copy
 import argparse
@@ -39,29 +38,8 @@ import plugin.blackboard
 import plugin.mouse
 import plugin.keyboard
 
-blackboard_fn = lambda x: None
+blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
-# Doesn't work:
-# isPressedB = keyboard.is_pressed('b')
-# isPressedM = keyboard.is_pressed('m')
-# isPressedK = keyboard.is_pressed('k')
-#
-# print(isPressedB)
-# if isPressedB: # black board feature
-#     plugin.blackboard.disable(False)
-#     plugin.mouse.disable(True)  # disable mouse plugin
-#     plugin.keyboard.disable(True)  # disable keyboard plugin
-# elif isPressedM:
-#     plugin.blackboard.disable(True)
-#     plugin.mouse.disable(False)  # disable mouse plugin
-#     plugin.keyboard.disable(True)  # disable keyboard plugin
-# elif isPressedK:
-#     plugin.blackboard.disable(True)
-#     plugin.mouse.disable(True)  # disable mouse plugin
-#     plugin.keyboard.disable(False)  # disable keyboard plugin
-
-# Check which feature to use
-plugin.blackboard.disable(False)
 plugin.mouse.disable(True)  # disable mouse plugin
 plugin.keyboard.disable(True)  # disable keyboard plugin
 
@@ -89,7 +67,7 @@ def get_args():
 
 
 def main():
-    global blackboard_fn
+    global blackboard_fn, blackboard_fn_backup
 
     # 参数解析 #################################################################
     args = get_args()
@@ -163,9 +141,9 @@ def main():
         if key == 27:  # ESC
             break
         if key == 112:  # p for pen
-            blackboard_fn = plugin.blackboard.pen
+            blackboard_fn_backup = blackboard_fn = plugin.blackboard.pen
         if key == 101:  # e for eraser
-            blackboard_fn = plugin.blackboard.erase
+            blackboard_fn_backup = blackboard_fn = plugin.blackboard.erase
         if key == 99:  # c for clear
             plugin.blackboard.clear()
         number, mode = select_mode(key, mode)
@@ -204,13 +182,21 @@ def main():
 
                 # 手势分类
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
-                #if(300 < landmark_list[8][0] < 1000 and 40 < landmark_list[8][1] < 400):
+
+                # if(300 < landmark_list[8][0] < 1000 and 40 < landmark_list[8][1] < 400):
                 #    plugin.mouse.move_to(landmark_list[8])
+
                 plugin.mouse.move_to(landmark_list[8])
-                if(hand_sign_id==4):
+
+                if hand_sign_id == 4:  # 4: click
                     plugin.mouse.mouse_press()
-                if(hand_sign_id != 4):
-                    plugin.blackboard.clr()
+                    if blackboard_fn == plugin.blackboard.none:
+                        blackboard_fn = blackboard_fn_backup
+                else:
+                    blackboard_fn = plugin.blackboard.none
+                    if len(plugin.blackboard.history) != 0 and plugin.blackboard.history[-1][0] is not None:
+                        plugin.blackboard.history.append([None, None])  # 断开
+
                 # 手指手势分类
                 finger_gesture_id = 0
                 point_history_len = len(pre_processed_point_history_list)
@@ -231,11 +217,8 @@ def main():
                     keypoint_classifier_labels[hand_sign_id],
                     point_history_classifier_labels[most_common_fg_id[0][0]]
                 )
-
-                if(hand_sign_id==4):
-                    plugin.blackboard.print_history(debug_image)  # finger No.8
-
-                cv.putText(debug_image,keypoint_classifier_labels[hand_sign_id],(10,90),cv.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
+                cv.putText(debug_image, keypoint_classifier_labels[hand_sign_id], (10, 90), cv.FONT_HERSHEY_SIMPLEX, 1,
+                           (0, 0, 255), 2)
         else:
             # didn't have a result
             point_history.append([0, 0])
@@ -243,13 +226,14 @@ def main():
 
        
         debug_image = draw_info(debug_image, fps, mode, number)
-        debug_image = plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
+        plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
+        plugin.blackboard.print_history(debug_image)
 
-        if(plugin.mouse.disabled == False):
+        if plugin.mouse.disabled is False:
             cv.rectangle(debug_image, (300, 40), (1000, 400), (0, 255, 0), 2)
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
-        
+
     cap.release()
     cv.destroyAllWindows()
 
