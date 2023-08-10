@@ -42,7 +42,13 @@ blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
 plugin.blackboard.disable(True)
 plugin.mouse.disable(True)  # disable mouse plugin
+<<<<<<< HEAD
 plugin.keyboard.disable(True)  # disable keyboard plugin
+=======
+plugin.keyboard.disable(True)
+plugin.blackboard.disable(False)
+# plugin.keyboard.disable(True)  # disable keyboard plugin
+>>>>>>> 4965834 (updated)
 
 
 def get_args():
