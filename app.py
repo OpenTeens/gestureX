@@ -40,7 +40,8 @@ import plugin.keyboard
 
 blackboard_fn = lambda x: None
 
-plugin.mouse.disable(True)  # disable mouse plugin
+plugin.blackboard.disable(True)
+plugin.mouse.disable(False)  # disable mouse plugin
 plugin.keyboard.disable(True)  # disable keyboard plugin
 
 
@@ -182,8 +183,13 @@ def main():
 
                 # 手势分类
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
+                #if(300 < landmark_list[8][0] < 1000 and 40 < landmark_list[8][1] < 400):
+                #    plugin.mouse.move_to(landmark_list[8])
                 plugin.mouse.move_to(landmark_list[8])
-
+                if(hand_sign_id==4):
+                    plugin.mouse.mouse_press()
+                if(hand_sign_id != 4):
+                    plugin.blackboard.clr()
                 # 手指手势分类
                 finger_gesture_id = 0
                 point_history_len = len(pre_processed_point_history_list)
@@ -204,19 +210,25 @@ def main():
                     keypoint_classifier_labels[hand_sign_id],
                     point_history_classifier_labels[most_common_fg_id[0][0]]
                 )
+
+                if(hand_sign_id==4):
+                    plugin.blackboard.print_history(debug_image)  # finger No.8
+
+                cv.putText(debug_image,keypoint_classifier_labels[hand_sign_id],(10,90),cv.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
         else:
             # didn't have a result
             point_history.append([0, 0])
-            plugin.blackboard.pen([None, None])  # -1 represents all.
+            # plugin.blackboard.pen([None, None])  # -1 represents all.
 
-        plugin.blackboard.print_history(debug_image)  # finger No.8
-
+       
         debug_image = draw_info(debug_image, fps, mode, number)
         debug_image = plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
 
+        if(plugin.mouse.disabled == False):
+            cv.rectangle(debug_image, (300, 40), (1000, 400), (0, 255, 0), 2)
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
-
+        
     cap.release()
     cv.destroyAllWindows()
 
