@@ -51,4 +51,6 @@ def mouse_press():
 
     if disabled:
         return "DISABLED"
-    pyautogui.press()
+    pyautogui.mouseDown()
+    pyautogui.sleep(0.5)
+    pyautogui.mouseUp()
