@@ -188,7 +188,6 @@ def main():
 
                 plugin.mouse.move_to(landmark_list[8])
 
-                print(blackboard_fn_backup)
                 if hand_sign_id == 4:  # 4: click
                     plugin.mouse.mouse_press()
                     if blackboard_fn == plugin.blackboard.none:
