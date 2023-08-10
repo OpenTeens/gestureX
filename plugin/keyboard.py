@@ -65,7 +65,7 @@ def keyboard_loop(pos):
         return None
 
 
-def keyborad_press(x):
+def keyboard_press(x):
     if disabled:
         return "DISABLED"
 
