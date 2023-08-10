@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-PLUGINS:
-- blackboard ................. enabled
-- mousecv .................... disabled
+
 
 
 PLUGIN USAGE:
@@ -37,15 +35,16 @@ import plugin.blackboard
 import plugin.mousecv
 
 blackboard_fn = plugin.blackboard.pen
-plugin.mousecv.disable(True)  # disable mousecv plugin
+plugin.blackboard.disable(True) 
+plugin.mousecv.disable(False)  # disable mousecv plugin
 
 
 def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--device", type=int, default=0)
-    parser.add_argument("--width", help='cap width', type=int, default=111960)
-    parser.add_argument("--height", help='cap height', type=int, default=111540)
+    parser.add_argument("--width", help='cap width', type=int, default=960)
+    parser.add_argument("--height", help='cap height', type=int, default=540)
 
     parser.add_argument('--use_static_image_mode', action='store_true')
     parser.add_argument("--min_detection_confidence",
