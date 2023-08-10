@@ -198,6 +198,7 @@ def main():
                     keypoint_classifier_labels[hand_sign_id],
                     point_history_classifier_labels[most_common_fg_id[0][0]]
                 )
+                cv.putText(debug_image,keypoint_classifier_labels[hand_sign_id],(10,90),cv.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
         else:
             # didn't have a result
             point_history.append([0, 0])
