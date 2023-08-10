@@ -32,8 +32,10 @@ def pen(new):
     history.append(new)
     grid_add(new)
 
-def clr():
-    history.clear()
+
+def none(_):
+    return None
+
 
 def grid_add(new):
     """
