@@ -4,7 +4,8 @@
 """
 PLUGINS:
 - blackboard ................. enabled
-- mousecv .................... disabled
+- mouse ...................... disabled
+- keyboard ................... disabled
 
 
 PLUGIN USAGE:
@@ -34,18 +35,21 @@ from model import PointHistoryClassifier
 
 # plug-in
 import plugin.blackboard
-import plugin.mousecv
+import plugin.mouse
+import plugin.keyboard
 
 blackboard_fn = plugin.blackboard.pen
-plugin.mousecv.disable(True)  # disable mousecv plugin
+
+plugin.mouse.disable(True)  # disable mouse plugin
+plugin.keyboard.disable(True)  # disable keyboard plugin
 
 
 def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--device", type=int, default=0)
-    parser.add_argument("--width", help='cap width', type=int, default=111960)
-    parser.add_argument("--height", help='cap height', type=int, default=111540)
+    parser.add_argument("--width", help='cap width', type=int, default=960)
+    parser.add_argument("--height", help='cap height', type=int, default=540)
 
     parser.add_argument('--use_static_image_mode', action='store_true')
     parser.add_argument("--min_detection_confidence",
@@ -177,7 +181,7 @@ def main():
 
                 # 手势分类
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
-                plugin.mousecv.move_to(landmark_list[8])
+                plugin.mouse.move_to(landmark_list[8])
 
                 # 手指手势分类
                 finger_gesture_id = 0
@@ -207,6 +211,7 @@ def main():
         plugin.blackboard.print_history(debug_image)  # finger No.8
 
         debug_image = draw_info(debug_image, fps, mode, number)
+        debug_image = plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
 
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
@@ -414,7 +419,7 @@ def draw_landmarks(image, landmark_point):
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
         if index == 8:  # 食指：指尖
             if blackboard_fn == plugin.blackboard.erase:
-                cv.circle(image, (landmark[0], landmark[1]), 15, (225, 255, 225), 1)
+                cv.circle(image, (landmark[0], landmark[1]), 15, (225, 255, 225), 2)
             else:
                 cv.circle(image, (landmark[0], landmark[1]), 8, (255, 255, 255), -1)
                 cv.circle(image, (landmark[0], landmark[1]), 8, (0, 0, 0), 1)
