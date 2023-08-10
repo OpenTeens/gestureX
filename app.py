@@ -16,7 +16,6 @@ PLUGIN USAGE:
 
 """
 
-import keyboard
 import csv
 import copy
 import argparse
@@ -64,7 +63,6 @@ blackboard_fn = lambda x: None
 plugin.blackboard.disable(False)
 plugin.mouse.disable(True)  # disable mouse plugin
 plugin.keyboard.disable(True)  # disable keyboard plugin
-
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -244,7 +242,6 @@ def main():
        
         debug_image = draw_info(debug_image, fps, mode, number)
         debug_image = plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
-
         if(plugin.mouse.disabled == False):
             cv.rectangle(debug_image, (300, 40), (1000, 400), (0, 255, 0), 2)
         # 显示画面 #############################################################
