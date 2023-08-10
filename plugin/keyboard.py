@@ -107,7 +107,6 @@ def press(x):
     global mouse_pressed, released
 
     if released is False:
-        print("UNRELEASED")
         return "UNRELEASED"
 
     mouse_pressed = x
