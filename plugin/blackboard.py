@@ -86,8 +86,8 @@ def erase(pos, radius=15):
 
     x, y = pos
     eraser_grids = set()
-    for bound_x in [x + radius, x - radius]:
-        for bound_y in [y + radius, y - radius]:
+    for bound_x in [x + radius, x - radius, x]:
+        for bound_y in [y + radius, y - radius, y]:
             eraser_grids.add((bound_x // GRID_SIZE, bound_y // GRID_SIZE))
 
     for g in eraser_grids:  # grid
