@@ -16,6 +16,7 @@ PLUGIN USAGE:
 
 """
 
+import keyboard
 import csv
 import copy
 import argparse
@@ -40,8 +41,28 @@ import plugin.keyboard
 
 blackboard_fn = plugin.blackboard.pen
 
-plugin.blackboard.disable(True)
-plugin.mouse.disable(False)  # disable mouse plugin
+# Doesn't work:
+# isPressedB = keyboard.is_pressed('b')
+# isPressedM = keyboard.is_pressed('m')
+# isPressedK = keyboard.is_pressed('k')
+#
+# print(isPressedB)
+# if isPressedB: # black board feature
+#     plugin.blackboard.disable(False)
+#     plugin.mouse.disable(True)  # disable mouse plugin
+#     plugin.keyboard.disable(True)  # disable keyboard plugin
+# elif isPressedM:
+#     plugin.blackboard.disable(True)
+#     plugin.mouse.disable(False)  # disable mouse plugin
+#     plugin.keyboard.disable(True)  # disable keyboard plugin
+# elif isPressedK:
+#     plugin.blackboard.disable(True)
+#     plugin.mouse.disable(True)  # disable mouse plugin
+#     plugin.keyboard.disable(False)  # disable keyboard plugin
+
+# Check which feature to use
+plugin.blackboard.disable(False)
+plugin.mouse.disable(True)  # disable mouse plugin
 plugin.keyboard.disable(True)  # disable keyboard plugin
 
 
