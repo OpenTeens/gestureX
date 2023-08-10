@@ -38,7 +38,7 @@ import plugin.blackboard
 import plugin.mouse
 import plugin.keyboard
 
-blackboard_fn = plugin.blackboard.pen
+blackboard_fn = lambda x: None
 
 plugin.mouse.disable(True)  # disable mouse plugin
 plugin.keyboard.disable(True)  # disable keyboard plugin
