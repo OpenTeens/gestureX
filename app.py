@@ -224,6 +224,7 @@ def main():
             point_history.append([0, 0])
             # plugin.blackboard.pen([None, None])  # -1 represents all.
 
+       
         debug_image = draw_info(debug_image, fps, mode, number)
         plugin.keyboard.keyboard_print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.print_history(debug_image)
