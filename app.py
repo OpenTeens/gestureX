@@ -40,7 +40,7 @@ import plugin.keyboard
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
-plugin.mouse.disable(True)
+plugin.mouse.disable(False)
 plugin.keyboard.disable(True)
 plugin.blackboard.disable(True)
 
@@ -131,7 +131,7 @@ def main():
 
     #  ########################################################################
     mode = 0
-
+    flag = 0
     while True:
         fps = cvFpsCalc.get()
 
@@ -190,6 +190,7 @@ def main():
 
                 if hand_sign_id == 4:  # 4: click
                     plugin.mouse.mouse_press()
+                    flag = 1
 
                     if clicked_key:
                         plugin.keyboard.press(clicked_key)
@@ -197,6 +198,9 @@ def main():
                     if blackboard_fn is plugin.blackboard.none:
                         blackboard_fn = blackboard_fn_backup
                 else:
+                    if(flag == 1):
+                        plugin.mouse.mouse_up()
+                        flag = 0
                     blackboard_fn = plugin.blackboard.none
                     if len(plugin.blackboard.history) != 0 and plugin.blackboard.history[-1][0] is not None:
                         plugin.blackboard.history.append([None, None])  # 断开
