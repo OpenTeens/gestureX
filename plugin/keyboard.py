@@ -45,8 +45,10 @@ def print_rec(image):
             if mouse_pressed == keys[index_y * sizeX + index_x]:
                 cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (255, 225, 0), -1)
                 history_press = None
+
                 cv.putText(image, keys[index_y * sizeX + index_x], (x + (key_siz // 2), y + (key_siz // 2)),
                            cv.FONT_HERSHEY_SIMPLEX, 1.0, (225, 225, 225), 2, cv.LINE_AA)
+
                 mouse_pressed = None
             else:
                 if history_press and keys[index_y * sizeX + index_x] == history_press:
@@ -54,6 +56,7 @@ def print_rec(image):
                     history_press = None
                 else:
                     cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (0, 255, 0), 2)
+
                 cv.putText(image, keys[index_y * sizeX + index_x], (x + (key_siz // 2), y + (key_siz // 2)),
                            cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, cv.LINE_AA)
 

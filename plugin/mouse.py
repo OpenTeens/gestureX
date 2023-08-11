@@ -47,10 +47,14 @@ def mouse_press():
     """
     :return: 点击（具体调用逻辑待定）
     """
-
     if disabled:
         return "DISABLED"
-    pyautogui.mouseDown() 
+
+    pyautogui.mouseDown()
+
 
 def mouse_up():
+    if disabled:
+        return "DISABLED"
+
     pyautogui.mouseUp()
