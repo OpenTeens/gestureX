@@ -16,8 +16,6 @@ PLUGIN USAGE:
 
 """
 
-print("Loading Plugins ... ")
-
 import csv
 import copy
 import argparse
@@ -43,8 +41,9 @@ import plugin.keyboard
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
 plugin.mouse.disable(True)  # disable mouse plugin
-plugin.keyboard.disable(True)  # disable keyboard plugin
-plugin.blackboard.disable(True)
+plugin.keyboard.disable(True)
+plugin.blackboard.disable(False)
+# plugin.keyboard.disable(True)  # disable keyboard plugin
 
 
 def get_args():
@@ -70,8 +69,6 @@ def get_args():
 
 
 def main():
-    print("Done.")  # opening plugins
-
     global blackboard_fn, blackboard_fn_backup
 
     # 参数解析 #################################################################
@@ -85,13 +82,13 @@ def main():
     min_detection_confidence = args.min_detection_confidence
     min_tracking_confidence = args.min_tracking_confidence
 
-    print("Opening Camera ... ")
+    use_brect = True
+
     # 相机准备 ###############################################################
     cap = cv.VideoCapture(cap_device)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
 
-    print("Done.")
     # 模型载荷 #############################################################
     # STATIC_IMAGE_MODE:如果设置为 false，该解决方案会将输入图像视为视频流。它将尝试在第一个输入图像中检测手，并在成功检测后进一步定位手的地标。在随后的图像中，一旦检测到所有 max_num_hands 手并定位了相应的手的地标，它就会简单地跟踪这些地标，而不会调用另一个检测，直到它失去对任何一只手的跟踪。这减少了延迟，非常适合处理视频帧。如果设置为 true，则在每个输入图像上运行手部检测，非常适合处理一批静态的、可能不相关的图像。默认为false。
     # STATIC_IMAGE_MODE:如果设置为 false，该解决方案会将输入图像视为视频流。它将尝试在第一个输入图像中检测手，并在成功检测后进一步定位手的地标。在随后的图像中，一旦检测到所有 max_num_hands 手并定位了相应的手的地标，它就会简单地跟踪这些地标，而不会调用另一个检测，直到它失去对任何一只手的跟踪。这减少了延迟，非常适合处理视频帧。如果设置为 true，则在每个输入图像上运行手部检测，非常适合处理一批静态的、可能不相关的图像。默认为false。
