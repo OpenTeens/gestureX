@@ -3,9 +3,9 @@
 
 """
 PLUGINS:
-- blackboard ................. enabled
-- mouse ...................... enabled
-- keyboard ................... disabled
+- blackboard
+- mouse
+- keyboard
 
 
 PLUGIN USAGE:
@@ -42,8 +42,8 @@ import plugin.keyboard
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
-plugin.mouse.disable(True)  # disable mouse plugin
-plugin.keyboard.disable(True)  # disable keyboard plugin
+plugin.mouse.disable(False)
+plugin.keyboard.disable(True)
 plugin.blackboard.disable(True)
 
 
@@ -136,6 +136,7 @@ def main():
 
     #  ########################################################################
     mode = 0
+    mouse_pressed_down = False
 
     while True:
         fps = cvFpsCalc.get()
@@ -151,6 +152,7 @@ def main():
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.erase
         if key == 99:  # c for clear
             plugin.blackboard.clear()
+            blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
         number, mode = select_mode(key, mode)
 
         # 相机捕获 #####################################################
@@ -194,7 +196,9 @@ def main():
                 plugin.mouse.move_to(landmark_list[8])
 
                 if hand_sign_id == 4:  # 4: click
-                    plugin.mouse.mouse_press()
+                    if mouse_pressed_down is False:
+                        plugin.mouse.mouse_press()
+                        mouse_pressed_down = True
 
                     if clicked_key:
                         plugin.keyboard.press(clicked_key)
@@ -202,9 +206,15 @@ def main():
                     if blackboard_fn is plugin.blackboard.none:
                         blackboard_fn = blackboard_fn_backup
                 else:
+                    if mouse_pressed_down:
+                        plugin.mouse.mouse_up()
+                        mouse_pressed_down = False
+
                     blackboard_fn = plugin.blackboard.none
+
                     if len(plugin.blackboard.history) != 0 and plugin.blackboard.history[-1][0] is not None:
                         plugin.blackboard.history.append([None, None])  # 断开
+
                     plugin.keyboard.release()
 
                 # 手指手势分类
