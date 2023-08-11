@@ -19,13 +19,11 @@ def move_to(tp: tuple, photo_width=960, photo_height=540):
     :param photo_height: 摄像头高
     :return: 无
     """
-
     if disabled:
         return "DISABLED"
 
     def helper():
         x, y = tp
-
         screen_width, screen_height = pyautogui.size()
 
         # 自稳定系统
@@ -34,7 +32,6 @@ def move_to(tp: tuple, photo_width=960, photo_height=540):
             return
 
         last = [x, y]
-        
         # 读取屏幕尺寸
         ratio_x, ratio_y = screen_width / photo_width, screen_height / photo_height
         # 变换摄像头坐标到屏幕坐标

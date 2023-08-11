@@ -40,11 +40,9 @@ import plugin.keyboard
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
-plugin.mouse.disable(True)  # disable mouse plugin
+plugin.mouse.disable(True)
 plugin.keyboard.disable(True)
-plugin.blackboard.disable(False)
-# plugin.keyboard.disable(True)  # disable keyboard plugin
-
+plugin.blackboard.disable(True)
 
 def get_args():
     parser = argparse.ArgumentParser()
