@@ -39,10 +39,11 @@ from model import PointHistoryClassifier
 import plugin.blackboard
 import plugin.mouse
 import plugin.keyboard
+import plugin.UI
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
-plugin.mouse.disable(False)
+plugin.mouse.disable(True)
 plugin.keyboard.disable(True)
 plugin.blackboard.disable(True)
 
@@ -137,6 +138,7 @@ def main():
     #  ########################################################################
     mode = 0
     mouse_pressed_down = False
+    Clicked_button = False
 
     while True:
         fps = cvFpsCalc.get()
@@ -196,6 +198,21 @@ def main():
                 plugin.mouse.move_to(landmark_list[8])
 
                 if hand_sign_id == 4:  # 4: click
+                    if(Clicked_button == False):
+                        button, check_button, status = plugin.UI.check_on_buttons(landmark_list[8])
+                        if status == True:
+                            status = False
+                        else:
+                            status = True
+                        if(check_button):
+                            if(button == 'blackboard'):
+                                plugin.blackboard.disable(status)
+                            elif(button == 'mouse'):
+                                plugin.mouse.disable(status)
+                            else:
+                                plugin.keyboard.disable(status)
+                        Clicked_button = True
+
                     if mouse_pressed_down is False:
                         plugin.mouse.mouse_press()
                         mouse_pressed_down = True
@@ -209,6 +226,9 @@ def main():
                     if mouse_pressed_down:
                         plugin.mouse.mouse_up()
                         mouse_pressed_down = False
+
+                    if Clicked_button:
+                        Clicked_button = False
 
                     blackboard_fn = plugin.blackboard.none
 
@@ -237,6 +257,7 @@ def main():
                     keypoint_classifier_labels[hand_sign_id],
                     point_history_classifier_labels[most_common_fg_id[0][0]]
                 )
+                
                 cv.putText(debug_image, keypoint_classifier_labels[hand_sign_id], (10, 90), cv.FONT_HERSHEY_SIMPLEX, 1,
                            (0, 0, 255), 2)
         else:
@@ -245,12 +266,17 @@ def main():
             # plugin.blackboard.pen([None, None])  # -1 represents all.
 
         debug_image = draw_info(debug_image, fps, mode, number)
+        # 显示按钮 #############################################################
+        plugin.UI.buttons(debug_image)
+
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.print_history(debug_image)
 
         if plugin.mouse.disabled is False:
             cv.rectangle(debug_image, (300, 40), (1000, 400), (0, 255, 0), 2)
         # 显示画面 #############################################################
+
+
         cv.imshow('Hand Gesture Recognition', debug_image)
 
     cap.release()
@@ -529,7 +555,7 @@ def draw_info_text(image, brect, handedness, hand_sign_text, finger_gesture_text
 def draw_info(image, fps, mode, number):
     cv.putText(image, "FPS:" + str(fps), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
     cv.putText(image, "FPS:" + str(fps), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2, cv.LINE_AA)
-
+    
     mode_string = ['Logging Key Point', 'Logging Point History']
     if 1 <= mode <= 2:
         cv.putText(image, "MODE:" + mode_string[mode - 1], (10, 90), cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1,
