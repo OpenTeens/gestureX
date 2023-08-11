@@ -9,6 +9,7 @@ Blackboard_color = (0, 0, 255)
 
 
 def buttons(debug_image):
+
     # Blackboard #######################################################
     cv.rectangle(debug_image, (900,10), (1050, 40), (255, 255, 255), -1)
     cv.putText(debug_image, Blackboard_status, (950, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
@@ -17,6 +18,7 @@ def buttons(debug_image):
     cv.rectangle(debug_image, (900,10), (1050, 40), (0, 0, 0), 2)
     cv.putText(debug_image, "Blackboard", (920, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
     cv.putText(debug_image, "Blackboard", (920, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
+
     # Keyboard #######################################################
     cv.rectangle(debug_image, (700,10), (850, 40), (255, 255, 255), -1)
     cv.putText(debug_image, Keyboard_status, (750, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
@@ -25,6 +27,7 @@ def buttons(debug_image):
     cv.rectangle(debug_image, (700,10), (850, 40), (0, 0, 0), 2)
     cv.putText(debug_image, "Keyboard", (720, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
     cv.putText(debug_image, "Keyboard", (720, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
+
     # Mouse #######################################################
     cv.rectangle(debug_image, (500,10), (650, 40), (255, 255, 255), -1)
     cv.putText(debug_image, Mouse_status, (550, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
@@ -35,10 +38,13 @@ def buttons(debug_image):
     cv.putText(debug_image, "Mouse", (520, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
     
 def check_on_buttons(pos):
+
     global Keyboard_status, Keyboard_color, Mouse_color, Mouse_status, Blackboard_color, Blackboard_status
     x,y = pos
+
     if(y <=40 or y >= 90):
         return x, False, False
+    
     if(500 < x < 650 ):
         Mouse_status, Mouse_color = reverse_status(Mouse_status, Mouse_color)
         Button = 'mouse'
@@ -57,6 +63,7 @@ def check_on_buttons(pos):
     return Button, True, status
     
 def reverse_status(status, color):
+    
     if(status == 'Off'):
         status = 'On'
         color = (0, 255, 0)

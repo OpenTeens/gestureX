@@ -212,7 +212,7 @@ def main():
                             else:
                                 plugin.keyboard.disable(status)
                         Clicked_button = True
-                        
+
                     if mouse_pressed_down is False:
                         plugin.mouse.mouse_press()
                         mouse_pressed_down = True
@@ -555,7 +555,7 @@ def draw_info_text(image, brect, handedness, hand_sign_text, finger_gesture_text
 def draw_info(image, fps, mode, number):
     cv.putText(image, "FPS:" + str(fps), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
     cv.putText(image, "FPS:" + str(fps), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2, cv.LINE_AA)
-
+    
     mode_string = ['Logging Key Point', 'Logging Point History']
     if 1 <= mode <= 2:
         cv.putText(image, "MODE:" + mode_string[mode - 1], (10, 90), cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1,
