@@ -2,7 +2,7 @@ import pyautogui
 import threading
 import cv2 as cv
 
-SENSITIVITY = 1
+SENSITIVITY = 1  # 触控板敏感度
 
 TB_START = (100, 100)
 TB_END = (860, 440)
@@ -21,7 +21,7 @@ def disable(d):
     disabled = d
 
 
-def move_to(tp: tuple):
+def move_to(tp):
     """
     :param tp: 摄像头点位置
     :return: 无
@@ -48,7 +48,8 @@ def move_to(tp: tuple):
 
         # 变换摄像头坐标到屏幕坐标
         screen_x, screen_y = x * ratio_x, y * ratio_y
-        pyautogui.moveTo(screen_x, screen_y)
+        if 0 <= screen_x <= screen_width and 0 <= screen_y <= screen_height:
+            pyautogui.moveTo(screen_x, screen_y)
 
     pyautogui.PAUSE = 0
     threading.Thread(target=helper).run()

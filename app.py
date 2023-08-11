@@ -252,13 +252,6 @@ def main():
                 # 绘图
                 # debug_image = draw_bounding_rect(use_brect, debug_image, brect)
                 debug_image = draw_landmarks(debug_image, landmark_list)
-                debug_image = draw_info_text(
-                    debug_image,
-                    brect,
-                    handedness,
-                    keypoint_classifier_labels[hand_sign_id],
-                    point_history_classifier_labels[most_common_fg_id[0][0]]
-                )
 
                 cv.putText(debug_image, keypoint_classifier_labels[hand_sign_id], (10, 90), cv.FONT_HERSHEY_SIMPLEX, 1,
                            (0, 0, 255), 2)
@@ -530,24 +523,6 @@ def draw_bounding_rect(use_brect, image, brect):
     if use_brect:
         # 外接矩形
         cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[3]), (0, 0, 0), 1)
-
-    return image
-
-
-def draw_info_text(image, brect, handedness, hand_sign_text, finger_gesture_text):
-    # cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[1] - 22), (0, 0, 0), -1)
-    #
-    # info_text = handedness.classification[0].label[0:]
-    # if hand_sign_text != "":
-    #     info_text = info_text + ':' + hand_sign_text
-    # cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4), cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1,
-    #            cv.LINE_AA)
-
-    if finger_gesture_text != "":
-        cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4,
-                   cv.LINE_AA)
-        cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60), cv.FONT_HERSHEY_SIMPLEX, 1.0,
-                   (255, 255, 255), 2, cv.LINE_AA)
 
     return image
 

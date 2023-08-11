@@ -8,33 +8,54 @@ Blackboard_status = "Off"
 Blackboard_color = (0, 0, 255)
 
 
+def calc_right_bond(left_bond, text):
+    text_width = cv.getTextSize(text, cv.FONT_HERSHEY_SIMPLEX, 0.7, 5)[0][0]
+    return left_bond + text_width + 40  # 40 for padding.
+
+
+def new_button(image, x, name, status, color):
+    right_bond = calc_right_bond(x, name)
+
+    cv.rectangle(image, (x, 10), (right_bond, 40), (255, 255, 255), -1)
+    cv.putText(image, status, (x + 50, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    cv.putText(image, status, (x + 50, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, color, 2, cv.LINE_AA)
+    cv.rectangle(image, (x, 40), (right_bond, 90), (0, 0, 0), 2)
+    cv.rectangle(image, (x, 10), (right_bond, 40), (0, 0, 0), 2)
+    cv.putText(image, name, (x + 20, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    cv.putText(image, name, (x + 20, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
+
+
 def buttons(debug_image):
+    new_button(debug_image, 200, "Mouse", Mouse_status, Mouse_color)
+    new_button(debug_image, 400, "Keyboard", Keyboard_status, Keyboard_color)
+    new_button(debug_image, 600, "Blackboard", Blackboard_status, Blackboard_color)
+
     # Blackboard #######################################################
-    cv.rectangle(debug_image, (900, 10), (1050, 40), (255, 255, 255), -1)
-    cv.putText(debug_image, Blackboard_status, (950, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
-    cv.putText(debug_image, Blackboard_status, (950, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, Blackboard_color, 2, cv.LINE_AA)
-    cv.rectangle(debug_image, (900, 40), (1050, 90), (0, 0, 0), 2)
-    cv.rectangle(debug_image, (900, 10), (1050, 40), (0, 0, 0), 2)
-    cv.putText(debug_image, "Blackboard", (920, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
-    cv.putText(debug_image, "Blackboard", (920, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
+    # cv.rectangle(debug_image, (900, 10), (1050, 40), (255, 255, 255), -1)
+    # cv.putText(debug_image, Blackboard_status, (950, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    # cv.putText(debug_image, Blackboard_status, (950, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, Blackboard_color, 2, cv.LINE_AA)
+    # cv.rectangle(debug_image, (900, 40), (1050, 90), (0, 0, 0), 2)
+    # cv.rectangle(debug_image, (900, 10), (1050, 40), (0, 0, 0), 2)
+    # cv.putText(debug_image, "Blackboard", (920, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    # cv.putText(debug_image, "Blackboard", (920, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
 
     # Keyboard #######################################################
-    cv.rectangle(debug_image, (700, 10), (850, 40), (255, 255, 255), -1)
-    cv.putText(debug_image, Keyboard_status, (750, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
-    cv.putText(debug_image, Keyboard_status, (750, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, Keyboard_color, 2, cv.LINE_AA)
-    cv.rectangle(debug_image, (700, 40), (850, 90), (0, 0, 0), 2)
-    cv.rectangle(debug_image, (700, 10), (850, 40), (0, 0, 0), 2)
-    cv.putText(debug_image, "Keyboard", (720, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
-    cv.putText(debug_image, "Keyboard", (720, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
-
-    # Mouse #######################################################
-    cv.rectangle(debug_image, (500, 10), (650, 40), (255, 255, 255), -1)
-    cv.putText(debug_image, Mouse_status, (550, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
-    cv.putText(debug_image, Mouse_status, (550, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, Mouse_color, 2, cv.LINE_AA)
-    cv.rectangle(debug_image, (500, 10), (650, 40), (0, 0, 0), 2)
-    cv.rectangle(debug_image, (500, 40), (650, 90), (0, 0, 0), 2)
-    cv.putText(debug_image, "Mouse", (520, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
-    cv.putText(debug_image, "Mouse", (520, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
+    # cv.rectangle(debug_image, (700, 10), (850, 40), (255, 255, 255), -1)
+    # cv.putText(debug_image, Keyboard_status, (750, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    # cv.putText(debug_image, Keyboard_status, (750, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, Keyboard_color, 2, cv.LINE_AA)
+    # cv.rectangle(debug_image, (700, 40), (850, 90), (0, 0, 0), 2)
+    # cv.rectangle(debug_image, (700, 10), (850, 40), (0, 0, 0), 2)
+    # cv.putText(debug_image, "Keyboard", (720, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    # cv.putText(debug_image, "Keyboard", (720, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
+    #
+    # # Mouse #######################################################
+    # cv.rectangle(debug_image, (500, 10), (650, 40), (255, 255, 255), -1)
+    # cv.putText(debug_image, Mouse_status, (550, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    # cv.putText(debug_image, Mouse_status, (550, 70), cv.FONT_HERSHEY_SIMPLEX, 0.7, Mouse_color, 2, cv.LINE_AA)
+    # cv.rectangle(debug_image, (500, 10), (650, 40), (0, 0, 0), 2)
+    # cv.rectangle(debug_image, (500, 40), (650, 90), (0, 0, 0), 2)
+    # cv.putText(debug_image, "Mouse", (520, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 5, cv.LINE_AA)
+    # cv.putText(debug_image, "Mouse", (520, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
 
 
 def check_on_buttons(pos):
@@ -44,18 +65,18 @@ def check_on_buttons(pos):
     if y <= 40 or y >= 90:
         return x, False, False
 
-    if 500 < x < 650:
+    if 200 < x < calc_right_bond(200, "Mouse"):
         Mouse_status, Mouse_color = reverse_status(Mouse_status, Mouse_color)
         button_name = 'mouse'
-        status = True if Mouse_status == 'On' else False
-    elif 700 < x < 850:
+        status = (Mouse_status == 'On')
+    elif 400 < x < calc_right_bond(400, "Keyboard"):
         Keyboard_status, Keyboard_color = reverse_status(Keyboard_status, Keyboard_color)
         button_name = 'keyboard'
-        status = True if Keyboard_status == 'On' else False
-    elif 900 < x < 1050:
+        status = (Keyboard_status == 'On')
+    elif 600 < x < calc_right_bond(600, "Blackboard"):
         Blackboard_status, Blackboard_color = reverse_status(Blackboard_status, Blackboard_color)
         button_name = 'blackboard'
-        status = True if Blackboard_status == 'On' else False
+        status = (Blackboard_status == 'On')
     else:
         return x, False, False
 
