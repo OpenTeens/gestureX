@@ -3,9 +3,9 @@
 
 """
 PLUGINS:
-- blackboard ................. enabled
-- mouse ...................... enabled
-- keyboard ................... disabled
+- blackboard
+- mouse
+- keyboard
 
 
 PLUGIN USAGE:
@@ -42,9 +42,9 @@ import plugin.keyboard
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
-plugin.mouse.disable(True)  # disable mouse plugin
-plugin.keyboard.disable(True)  # disable keyboard plugin
-plugin.blackboard.disable(True)
+plugin.mouse.disable(True)  # mouse plugin
+plugin.keyboard.disable(False)  # keyboard plugin
+plugin.blackboard.disable(True)  # blackboard plugin
 
 
 def get_args():
@@ -151,6 +151,7 @@ def main():
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.erase
         if key == 99:  # c for clear
             plugin.blackboard.clear()
+            blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
         number, mode = select_mode(key, mode)
 
         # 相机捕获 #####################################################
