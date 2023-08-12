@@ -6,10 +6,9 @@ This is a sample code program that builds functionalities (virtual keyboard, tou
 This repository contains the following contents.
 * Sample program
 * Hand sign recognition model(TFLite)
-* Finger gesture recognition model(TFLite)
-* Learning data for hand sign recognition and notebook for learning
-* Learning data for finger gesture recognition and notebook for learning
-
+* Hand controlled virtual touchpad
+* Hand controlled virtual keyboard
+* Hand controlled virtual drawboard
 # Requirements
 * mediapipe 0.8.1
 * OpenCV 3.4.2 or Later

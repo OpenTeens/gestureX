@@ -1,6 +1,4 @@
 import cv2 as cv
-import pygetwindow as gw
-import pyautogui
 
 Keyboard_status = "Off"
 Keyboard_color = (0, 0, 255)
