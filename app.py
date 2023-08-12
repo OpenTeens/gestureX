@@ -43,7 +43,6 @@ import plugin.keyboard
 import plugin.UI
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
-RATIO = 1 if sys.platform == 'win32' else 0.75
 
 plugin.mouse.disable(True)
 plugin.keyboard.disable(True)
@@ -81,8 +80,8 @@ def main():
     args = get_args()
 
     cap_device = args.device
-    cap_width = args.width * RATIO
-    cap_height = args.height * RATIO
+    cap_width = args.width
+    cap_height = args.height
 
     use_static_image_mode = args.use_static_image_mode
     min_detection_confidence = args.min_detection_confidence
