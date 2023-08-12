@@ -5,7 +5,7 @@ import cv2 as cv
 SENSITIVITY = 1  # 触控板敏感度
 
 TB_START = (100, 100)
-TB_END = (860, 440)
+TB_END = (760, 370)
 TB_WIDTH = TB_END[0] - TB_START[0]
 TB_HEIGHT = TB_END[1] - TB_START[1]
 
