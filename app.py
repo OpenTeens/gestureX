@@ -54,8 +54,8 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--device", type=int, default=0)
-    parser.add_argument("--width", help='cap width', type=int, default=960 * RATIO)
-    parser.add_argument("--height", help='cap height', type=int, default=540 * RATIO)
+    parser.add_argument("--width", help='cap width', type=int, default=960)
+    parser.add_argument("--height", help='cap height', type=int, default=540)
 
     parser.add_argument('--use_static_image_mode', action='store_true')
     parser.add_argument("--min_detection_confidence",
@@ -81,8 +81,8 @@ def main():
     args = get_args()
 
     cap_device = args.device
-    cap_width = args.width
-    cap_height = args.height
+    cap_width = args.width * RATIO
+    cap_height = args.height * RATIO
 
     use_static_image_mode = args.use_static_image_mode
     min_detection_confidence = args.min_detection_confidence
