@@ -156,6 +156,8 @@ def main():
         if key == 99:  # c for clear
             plugin.blackboard.clear()
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
+        if key == 108: #l to save blackboard to image
+            plugin.blackboard.blackboard_output()
 
         number, mode = select_mode(key, mode)
 
