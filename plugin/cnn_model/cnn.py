@@ -90,5 +90,6 @@ history = model.fit(X_train,Y_train, batch_size=batch_size,
                               epochs = epochs, validation_data = (X_val,Y_val))
 
 
-
+model_save_path = 'cnn.hdf5'
+model = tf.keras.models.load_model(model_save_path)
 
