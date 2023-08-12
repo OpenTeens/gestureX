@@ -1,7 +1,6 @@
-# hand-gesture-recognition-using-mediapipe
-This is a sample code program that builds functionalities (virtual keyboard, touchpad, and drawboard) upon hand gesture recognition project ([this one](https://github.com/Kazuhito00/hand-gesture-recognition-using-mediapipe)) that utilizes a simple MLP using key points detected with Mediapipe.
+# Multi-functional extensible project based on gesture recognition
+This is a sample code program that builds functionalities (virtual keyboard, touchpad, and drawboard) upon hand gesture recognition project ([this one](https://github.com/Kazuhito00/hand-gesture-recognition-using-mediapipe)) which utilizes a simple MLP using key points detected with Mediapipe.
 
-<br> 
 ![mqlrf-s6x16](https://user-images.githubusercontent.com/37477845/102222442-c452cd00-3f26-11eb-93ec-c387c98231be.gif)
 
 This repository contains the following contents.
@@ -17,6 +16,7 @@ This repository contains the following contents.
 * Tensorflow 2.3.0 or Later<br>tf-nightly 2.5.0.dev or later (Only when creating a TFLite for an LSTM model)
 * scikit-learn 0.23.2 or Later (Only if you want to display the confusion matrix) 
 * matplotlib 3.3.2 or Later (Only if you want to display the confusion matrix)
+* pyautogui 0.9.54 or Later
 
 # Demo
 Here's how to run the demo using your webcam.

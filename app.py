@@ -43,7 +43,6 @@ import plugin.keyboard
 import plugin.UI
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
-RATIO = 1 if sys.platform == 'win32' else 0.75
 
 plugin.mouse.disable(True)
 plugin.keyboard.disable(True)
@@ -54,8 +53,8 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--device", type=int, default=0)
-    parser.add_argument("--width", help='cap width', type=int, default=960)
-    parser.add_argument("--height", help='cap height', type=int, default=540)
+    parser.add_argument("--width", help='cap width', type=int, default=1280)
+    parser.add_argument("--height", help='cap height', type=int, default=720)
 
     parser.add_argument('--use_static_image_mode', action='store_true')
     parser.add_argument("--min_detection_confidence",
@@ -81,8 +80,8 @@ def main():
     args = get_args()
 
     cap_device = args.device
-    cap_width = args.width * RATIO
-    cap_height = args.height * RATIO
+    cap_width = args.width
+    cap_height = args.height
 
     use_static_image_mode = args.use_static_image_mode
     min_detection_confidence = args.min_detection_confidence
@@ -263,7 +262,6 @@ def main():
             # plugin.blackboard.pen([None, None])  # -1 represents all.
 
         debug_image = draw_info(debug_image, fps, mode, number)
-
         # 显示按钮 #############################################################
         plugin.UI.buttons(debug_image)
 
@@ -273,6 +271,7 @@ def main():
 
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
+        cv.namedWindow("OpenCV")
 
     cap.release()
     cv.destroyAllWindows()
