@@ -262,7 +262,6 @@ def main():
             # plugin.blackboard.pen([None, None])  # -1 represents all.
 
         debug_image = draw_info(debug_image, fps, mode, number)
-
         # 显示按钮 #############################################################
         plugin.UI.buttons(debug_image)
 
@@ -272,6 +271,7 @@ def main():
 
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
+        cv.namedWindow("OpenCV")
 
     cap.release()
     cv.destroyAllWindows()

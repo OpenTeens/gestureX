@@ -2,22 +2,21 @@ import cv2 as cv
 import pyautogui
 
 pyautogui.PAUSE = 0
-stx, sty = 0, 100
-key_siz = 60
-rax, ray = 120, 80
+stx, sty = 100, 150
+key_siz = 80
+rax, ray = 105, 105
 history_press = None
 disabled = False
 mouse_pressed = None
 released = True
-sizeX = 8
+sizeX = 9
 sizeY = 5
 
-keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-        'Q', 'W', 'E', 'R', 'T', 'Y',
-        'U', 'I', 'O', 'P', 'A', 'S',
-        'D', 'F', 'G', 'H', 'J', 'K',
-        'L', 'Z', 'X', 'C', 'V', 'B',
-        'N', 'M', ',', '.', '?', '!']
+keys = ['1', '2', '3', '4', '5', '6', '7', '8', 'Enter',
+        '9', '0', 'Q', 'W', 'E', 'R', 'T', 'Y', 'Backspace',
+        'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'Esc',
+        'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'Tab',
+        'V', 'B', 'N', 'M', ',', '.', '?', '!', 'Space',]
 
 
 def disable(d):
@@ -43,22 +42,31 @@ def print_rec(image):
         for x in range(stx, sizeX * rax + stx, rax):
             index_x = (x - stx) // rax
             if mouse_pressed == keys[index_y * sizeX + index_x]:
-                cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (255, 225, 0), -1)
+                if index_x == 8:
+                    cv.rectangle(image, (x, y), (x + key_siz+160, y + key_siz), (255, 225, 0), -1)
+                else:
+                    cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (255, 225, 0), -1)
                 history_press = None
 
                 cv.putText(image, keys[index_y * sizeX + index_x], (x + (key_siz // 2), y + (key_siz // 2)),
-                           cv.FONT_HERSHEY_SIMPLEX, 1.0, (225, 225, 225), 2, cv.LINE_AA)
+                           cv.FONT_HERSHEY_SIMPLEX, 1.2, (225, 225, 225), 2, cv.LINE_AA)
 
                 mouse_pressed = None
             else:
                 if history_press and keys[index_y * sizeX + index_x] == history_press:
-                    cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (0, 0, 225), 2)
+                    if index_x == 8:
+                        cv.rectangle(image, (x, y), (x + key_siz+160, y + key_siz), (0, 0, 225), 2)
+                    else:
+                        cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (0, 0, 225), 2)
                     history_press = None
                 else:
-                    cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (0, 255, 0), 2)
+                    if index_x == 8:
+                        cv.rectangle(image, (x, y), (x + key_siz+160, y + key_siz), (0, 255, 0), 2)
+                    else:
+                        cv.rectangle(image, (x, y), (x + key_siz, y + key_siz), (0, 255, 0), 2)
 
                 cv.putText(image, keys[index_y * sizeX + index_x], (x + (key_siz // 2), y + (key_siz // 2)),
-                           cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, cv.LINE_AA)
+                           cv.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2, cv.LINE_AA)
 
 
 def on_key(pos, i, size):
