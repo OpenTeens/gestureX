@@ -12,11 +12,12 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
 from tensorflow.keras.preprocessing import image
 import matplotlib.pyplot as plt
 
-BASEDIR = ".."
+BASEDIR = "dataCNN"
 PICKLE_DIR     = os.path.join(BASEDIR, 'pickles')
 TRAIN_DATAFILE = os.path.join(PICKLE_DIR, 'train.pickle')
 VAL_DATAFILE   = os.path.join(PICKLE_DIR, 'val.pickle')
 TEST_DATAFILE  = os.path.join(PICKLE_DIR, 'test.pickle')
+
 
 output_labels = [
   'other',     #    0
