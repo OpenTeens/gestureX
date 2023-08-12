@@ -106,3 +106,6 @@ test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print("Test Loss:", test_loss)
 print("Test Accuracy:", test_accuracy)
 print("Test Accuracy:", test_accuracy)
+
+model_save_path = 'cnn.hdf5'
+model = tf.keras.models.load_model(model_save_path)
