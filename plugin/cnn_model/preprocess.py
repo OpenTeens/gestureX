@@ -7,6 +7,7 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D, BatchNormalization, Input, Activation, Reshape
 from tensorflow.keras.optimizers.legacy import Adam
+import tensorflow as tf
 
 def preprocess_image(image_path, target_size):
     image = Image.open(image_path)
@@ -59,56 +60,49 @@ json_data = load_json(json_path)
 
 image_label_mapping = associate_images_with_labels(images_folder, json_data)
 
-
 images, labels = prepare_data(image_label_mapping, target_size)
 
-train_images, train_labels, test_images, test_labels = train_test_split(images, labels, test_size=0.2, random_state=42)
+train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2, random_state=42)
 
-print(len(train_images))
-print(len(train_labels))
+print(train_images.shape)
 
+model = Sequential()
+model.add(Reshape((70, 70, 1), input_shape=(244, 244, 3)))
+model.add(Conv2D(70, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.3))
+
+model.add(Conv2D(70, (3, 3), padding='same'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Activation('relu'))
+
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(70, (3, 3), padding='same'))
+model.add(Activation('relu'))
+
+model.add(Dropout(0.3))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Activation('relu'))
+
+model.add(Flatten())
+model.add(Dense(200))
+model.add(Activation('relu'))
+model.add(Dense(4))
+model.add(Activation('softmax'))
 #
-# model = Sequential()
-# model.add(Reshape((70, 70, 1)))
-# model.add(Conv2D(70, (3, 3), padding='same'))
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Dropout(0.3))
-#
-# model.add(Conv2D(70, (3, 3), padding='same'))
-#
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Activation('relu'))
-#
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Conv2D(70, (3, 3), padding='same'))
-# model.add(Activation('relu'))
-#
-# model.add(Dropout(0.3))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Activation('relu'))
-#
-# model.add(Flatten())
-#
-# model.add(Dense(200))
-# model.add(Activation('relu'))
-# model.add(Dense(4))
-# model.add(Activation('softmax'))
-#
-# opt = Adam(learning_rate=0.001)
-#
-#
-# model.compile(loss='categorical_crossentropy',
-#               optimizer=opt,
-#               metrics=['accuracy'])
-# epochs = 25
-# batch_size = 32
-#
-# history = model.fit(train_images,train_labels, batch_size=batch_size,
-#                               epochs = epochs)
-#
-# print(history)
-#
-# test_loss, test_accuracy = model.evaluate(test_images, test_labels)
-#
-# print(test_accuracy)
+opt = Adam(learning_rate=0.001)
+
+model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
+
+epochs = 25
+batch_size = 32
+
+history = model.fit(train_images, train_labels, batch_size=batch_size, epochs=epochs)
+
+print(history)
+
+test_loss, test_accuracy = model.evaluate(test_images, test_labels)
+print("Test Loss:", test_loss)
+print("Test Accuracy:", test_accuracy)
+print("Test Accuracy:", test_accuracy)
