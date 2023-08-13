@@ -158,8 +158,10 @@ def main():
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
         if key == 115:  # s for save
             plugin.blackboard.save()
-        if key == 108: #l to save blackboard to image
-            plugin.blackboard.blackboard_output()
+        if key == 100:  # d for diffusion
+            exported = plugin.blackboard.export(1)
+            cv.imwrite("output2.png", exported[0])
+            print(exported[1])
 
         number, mode = select_mode(key, mode)
 

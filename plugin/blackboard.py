@@ -53,6 +53,18 @@ def grid_add(new):
     g.append(new)
 
 
+def distance(p1, p2):
+    """
+    Calculate distance (squared) between two points.
+    :param p1: point 1
+    :param p2: point 2
+    :return: squared distance
+    """
+    if p1[0] is None or p2[0] is None:
+        return 0
+    return (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
+
+
 def print_history(image):
     """
     Print pen trace on screen.
@@ -63,12 +75,20 @@ def print_history(image):
         return "DISABLED"
 
     last_h = None
-    for h in history:
+    for i in range(len(history)):
+        h = history[i]
         if h[0] is None:
-            if last_h is None:  # normalize
+            # normalize
+            if last_h is None:
                 del h
+                continue
             else:
                 last_h = None
+
+            # 稳定系统
+            if i + 1 < len(history) and distance(history[i - 1], history[i + 1]) < 5 ** 2:
+                del h
+
             continue
         if last_h is not None:
             cv.line(image, tuple(last_h), tuple(h), (0, 225, 0), 3)
@@ -109,35 +129,27 @@ def clear():
     grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
 
 
-def blackboard_output():
-    """
-    Output pen trace to image file
-    :return: None
-    """
-
-    # 创建一个空白1280x720的图片
-    img = np.full((720, 1280, 3), 255, dtype=np.uint8)
-    print_history(img)
-    cv.imwrite("output1.png", img)
-
-
-def export():
+def export(mode=0):
     """
     Export pen trace to image.
-    :param mode: export mode, 0: all traces, 1: latest trace
-    :param export_square: whether to export a square image
+    :param mode: 0: last trace, 1: all traces
     :return: png image
     """
     if disabled:
         return "DISABLED"
 
-    # generate last trace
-    pen_start_index = 0
-    for i in range(len(history) - 1, -1, -1):
-        if history[i][0] is None:
-            pen_start_index = i + 1
-            break
-    exp_history = history[pen_start_index:]
+    exp_history = []
+    if mode == 0:
+        # generate last trace
+        pen_start_index = 0
+        for i in range(len(history) - 1, -1, -1):
+            if history[i][0] is None:
+                pen_start_index = i + 1
+                break
+        exp_history = history[pen_start_index:]
+    elif mode == 1:
+        # generate all traces
+        exp_history = history.copy()
 
     if len(exp_history) == 0:
         # No pen trace.
@@ -147,6 +159,9 @@ def export():
     p1 = [SCREEN_WIDTH, SCREEN_HEIGHT]
     p2 = [0, 0]
     for h in exp_history:
+        if h[0] is None:
+            continue
+
         p1[0] = min(p1[0], h[0])
         p1[1] = min(p1[1], h[1])
         p2[0] = max(p2[0], h[0])
@@ -156,18 +171,24 @@ def export():
     img_width = p2[0] - p1[0]
     img_height = p2[1] - p1[1]
     delta = (img_width - img_height) // 2
-    if img_width > img_height:
-        p1 = [p1[0], p1[1] - delta]
-    else:
-        p1 = [p1[0] - delta, p1[1]]
-    img_width = img_height = max(img_width, img_height)
+    if mode == 0:
+        if img_width > img_height:
+            p1 = [p1[0], p1[1] - delta]
+        else:
+            p1 = [p1[0] - delta, p1[1]]
+        img_width = img_height = max(img_width, img_height)
 
     # Draw pen trace on image.
-    image = 255 * np.ones(shape=[img_width, img_height, 3], dtype=np.uint8)  # blank image with white background
+    image = 255 * np.ones(shape=[img_height, img_width, 3], dtype=np.uint8)  # blank image with white background
     last_h = None
     for i in range(len(exp_history)):
         h = exp_history[i]
-        h = (h[0] - p1[0], h[1] - p1[1])
+
+        if h[0] is None:
+            last_h = None
+            continue
+
+        h = (h[0] - p1[0], h[1] - p1[1])  # add bias
 
         if last_h is None:
             last_h = h
@@ -176,10 +197,10 @@ def export():
         cv.line(image, last_h, h, (0, 0, 0), 3)  # draw line (black)
         last_h = h
 
-    return image
+    return image, p1
 
 
-def save():
+def save(mode=0):
     """
     Save image to file.
     :return: None
@@ -187,4 +208,4 @@ def save():
     if disabled:
         return "DISABLED"
 
-    cv.imwrite("output2.png", export())
+    cv.imwrite("output2.png", export(mode)[0])
