@@ -10,7 +10,7 @@ def generate_image(name):
     """
     RapidAPI_Key = os.getenv("RapidAPI_Key")
     url = "https://dezgo.p.rapidapi.com/image2image"
-    prompt = f"draw a {name} with approiate color"
+    prompt = f"draw a {name} with appropriate color"
     negative_prompt = ""
     filename = "input.png"
 
