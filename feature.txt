@@ -2,6 +2,6 @@
 +--------------------+---------------------+-----------
 |  Blackboard        |  @BernieHuang2008   |  Done
 |  Mouse Control     |  @YangZhen          |  Done
-|  Keyboard          |  @YangZhen          |  Testing
-|  Shape Reco        |  @CJWZhang          |  Developing
-|  Stable Diffusion  |                     |  Idea
+|  Keyboard          |  @YangZhen          |  Done
+|  Shape Reco        |  @CJWZhang          |  Testing
+|  Stable Diffusion  |  @Richard            |  Developing
