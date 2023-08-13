@@ -203,7 +203,7 @@ def main():
 
                 if hand_sign_id == 4:  # 4: click
                     if not button_pressed_down:
-                        button, check_button, status = plugin.UI.check_on_buttons(landmark_list[8])
+                        button, check_button, status = plugin.UI.check_on_buttons(landmark_list[8], debug_image)
                         if status is True:
                             status = False
                         else:

@@ -58,7 +58,7 @@ def buttons(debug_image):
     # cv.putText(debug_image, "Mouse", (520, 30), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv.LINE_AA)
 
 
-def check_on_buttons(pos):
+def check_on_buttons(pos, debug_image):
     global Keyboard_status, Keyboard_color, Mouse_color, Mouse_status, Blackboard_color, Blackboard_status
     x, y = pos
 
@@ -69,14 +69,17 @@ def check_on_buttons(pos):
         Mouse_status, Mouse_color = reverse_status(Mouse_status, Mouse_color)
         button_name = 'mouse'
         status = (Mouse_status == 'On')
+        cv.rectangle(debug_image, (200,40), (calc_right_bond(200, "Mouse"), 90), (255,0,0), -1)
     elif 400 < x < calc_right_bond(400, "Keyboard"):
         Keyboard_status, Keyboard_color = reverse_status(Keyboard_status, Keyboard_color)
         button_name = 'keyboard'
         status = (Keyboard_status == 'On')
+        cv.rectangle(debug_image, (400,40), (calc_right_bond(400, "Keyboard"), 90), (255,0,0), -1)
     elif 600 < x < calc_right_bond(600, "Blackboard"):
         Blackboard_status, Blackboard_color = reverse_status(Blackboard_status, Blackboard_color)
         button_name = 'blackboard'
         status = (Blackboard_status == 'On')
+        cv.rectangle(debug_image, (600,40), (calc_right_bond(600, "Blackboard"), 90), (255,0,0), -1)
     else:
         return x, False, False
 
