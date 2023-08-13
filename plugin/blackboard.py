@@ -108,6 +108,16 @@ def clear():
     history = []
     grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
 
+def blackboard_output():
+    """
+    Output pen trace to image file
+    :return: None
+    """
+
+    #创建一个空白1280x720的图片
+    img = np.full((720, 1280, 3), 255,dtype=np.uint8)
+    print_history(img)
+    cv.imwrite("output.png", img)
 
 def export():
     """

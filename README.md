@@ -1,22 +1,21 @@
-# hand-gesture-recognition-using-mediapipe
+# Multi-functional extensible project based on gesture recognition
 This is a sample code program that builds functionalities (virtual keyboard, touchpad, and drawboard) upon hand gesture recognition project ([this one](https://github.com/Kazuhito00/hand-gesture-recognition-using-mediapipe)) which utilizes a simple MLP using key points detected with Mediapipe.
 
-<br> 
 ![mqlrf-s6x16](https://user-images.githubusercontent.com/37477845/102222442-c452cd00-3f26-11eb-93ec-c387c98231be.gif)
 
 This repository contains the following contents.
 * Sample program
 * Hand sign recognition model(TFLite)
-* Finger gesture recognition model(TFLite)
-* Learning data for hand sign recognition and notebook for learning
-* Learning data for finger gesture recognition and notebook for learning
-
+* Hand controlled virtual touchpad
+* Hand controlled virtual keyboard
+* Hand controlled virtual drawboard
 # Requirements
 * mediapipe 0.8.1
 * OpenCV 3.4.2 or Later
 * Tensorflow 2.3.0 or Later<br>tf-nightly 2.5.0.dev or later (Only when creating a TFLite for an LSTM model)
 * scikit-learn 0.23.2 or Later (Only if you want to display the confusion matrix) 
 * matplotlib 3.3.2 or Later (Only if you want to display the confusion matrix)
+* pyautogui 0.9.54 or Later
 
 # Demo
 Here's how to run the demo using your webcam.
@@ -33,6 +32,8 @@ The following options can be specified when running the demo.
 Detection confidence threshold (Default：0.5)
 * --min_tracking_confidence<br>
 Tracking confidence threshold (Default：0.5)
+* --function to be enabled
+* --max_num of hands detected
 
 # Directory
 <pre>

@@ -158,6 +158,8 @@ def main():
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
         if key == 115:  # s for save
             plugin.blackboard.save()
+        if key == 108: #l to save blackboard to image
+            plugin.blackboard.blackboard_output()
 
         number, mode = select_mode(key, mode)
 
@@ -203,7 +205,7 @@ def main():
 
                 if hand_sign_id == 4:  # 4: click
                     if not button_pressed_down:
-                        button, check_button, status = plugin.UI.check_on_buttons(landmark_list[8])
+                        button, check_button, status = plugin.UI.check_on_buttons(landmark_list[8], debug_image)
                         if status is True:
                             status = False
                         else:
