@@ -273,7 +273,6 @@ def main():
 
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
-        cv.namedWindow("OpenCV")
 
     cap.release()
     cv.destroyAllWindows()
