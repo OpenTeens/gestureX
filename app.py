@@ -156,6 +156,8 @@ def main():
         if key == 99:  # c for clear
             plugin.blackboard.clear()
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
+        if key == 115:  # s for save
+            plugin.blackboard.save()
 
         number, mode = select_mode(key, mode)
 
@@ -177,7 +179,7 @@ def main():
         if results.multi_hand_landmarks is not None:
             for hand_landmarks, handedness in zip(results.multi_hand_landmarks, results.multi_handedness):
                 # 计算边界矩形
-                brect = calc_bounding_rect(debug_image, hand_landmarks)
+                # brect = calc_bounding_rect(debug_image, hand_landmarks)
                 # 计算手指坐标
                 landmark_list, landmark2 = calc_landmark_list(debug_image, hand_landmarks)
 

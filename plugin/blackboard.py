@@ -1,4 +1,5 @@
 import cv2 as cv
+import numpy as np
 
 # CONSTANTS
 GRID_SIZE = 20  # px
@@ -106,3 +107,79 @@ def clear():
     global history, grid
     history = []
     grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
+
+
+def export(mode=1, export_square=True):
+    """
+    Export pen trace to image.
+    :param mode: export mode, 0: all traces, 1: latest trace
+    :param export_square: whether to export a square image
+    :return: png image
+    """
+    if disabled:
+        return "DISABLED"
+
+    exp_history = []
+    if mode == 0:
+        exp_history = history.copy()
+    elif mode == 1:
+        pen_start_index = 0
+        for i in range(len(history) - 1, -1, -1):
+            if history[i][0] is None:
+                pen_start_index = i + 1
+                break
+        exp_history = history[pen_start_index:]
+
+    if len(exp_history) == 0:
+        # No pen trace.
+        return None
+
+    # Find the bounding box of pen trace.
+    p1 = [SCREEN_WIDTH, SCREEN_HEIGHT]
+    p2 = [0, 0]
+    for h in exp_history:
+        p1[0] = min(p1[0], h[0])
+        p1[1] = min(p1[1], h[1])
+        p2[0] = max(p2[0], h[0])
+        p2[1] = max(p2[1], h[1])
+
+    # Calculate image size.
+    img_width = p2[0] - p1[0]
+    img_height = p2[1] - p1[1]
+    if export_square:
+        delta = (img_width - img_height) // 2
+        if img_width > img_height:
+            p1 = [p1[0], p1[1] - delta]
+            p2 = [p2[0], p2[1] + delta]
+        else:
+            p1 = [p1[0] - delta, p1[1]]
+            p2 = [p2[0] + delta, p2[1]]
+
+        img_width = img_height = max(img_width, img_height)
+
+    # Draw pen trace on image.
+    image = 255 * np.ones(shape=[img_width, img_height, 3], dtype=np.uint8)  # blank image with white background
+    last_h = None
+    for i in range(len(exp_history)):
+        h = exp_history[i]
+        h = (h[0] - p1[0], h[1] - p1[1])
+
+        if last_h is None:
+            last_h = h
+            continue
+
+        cv.line(image, last_h, h, (0, 0, 0), 3)  # draw line (black)
+        last_h = h
+
+    return image
+
+
+def save():
+    """
+    Save image to file.
+    :return: None
+    """
+    if disabled:
+        return "DISABLED"
+
+    cv.imwrite("output.png", export())
