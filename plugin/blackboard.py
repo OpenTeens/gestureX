@@ -109,7 +109,7 @@ def clear():
     grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
 
 
-def export(mode=1, export_square=True):
+def export():
     """
     Export pen trace to image.
     :param mode: export mode, 0: all traces, 1: latest trace
@@ -119,16 +119,13 @@ def export(mode=1, export_square=True):
     if disabled:
         return "DISABLED"
 
-    exp_history = []
-    if mode == 0:
-        exp_history = history.copy()
-    elif mode == 1:
-        pen_start_index = 0
-        for i in range(len(history) - 1, -1, -1):
-            if history[i][0] is None:
-                pen_start_index = i + 1
-                break
-        exp_history = history[pen_start_index:]
+    # generate last trace
+    pen_start_index = 0
+    for i in range(len(history) - 1, -1, -1):
+        if history[i][0] is None:
+            pen_start_index = i + 1
+            break
+    exp_history = history[pen_start_index:]
 
     if len(exp_history) == 0:
         # No pen trace.
@@ -146,16 +143,12 @@ def export(mode=1, export_square=True):
     # Calculate image size.
     img_width = p2[0] - p1[0]
     img_height = p2[1] - p1[1]
-    if export_square:
-        delta = (img_width - img_height) // 2
-        if img_width > img_height:
-            p1 = [p1[0], p1[1] - delta]
-            p2 = [p2[0], p2[1] + delta]
-        else:
-            p1 = [p1[0] - delta, p1[1]]
-            p2 = [p2[0] + delta, p2[1]]
-
-        img_width = img_height = max(img_width, img_height)
+    delta = (img_width - img_height) // 2
+    if img_width > img_height:
+        p1 = [p1[0], p1[1] - delta]
+    else:
+        p1 = [p1[0] - delta, p1[1]]
+    img_width = img_height = max(img_width, img_height)
 
     # Draw pen trace on image.
     image = 255 * np.ones(shape=[img_width, img_height, 3], dtype=np.uint8)  # blank image with white background
