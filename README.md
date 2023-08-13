@@ -32,6 +32,8 @@ The following options can be specified when running the demo.
 Detection confidence threshold (Default：0.5)
 * --min_tracking_confidence<br>
 Tracking confidence threshold (Default：0.5)
+* --function to be enabled
+* --max_num of hands detected
 
 # Directory
 <pre>
