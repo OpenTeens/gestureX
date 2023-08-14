@@ -90,7 +90,7 @@ opt = keras_legacy_optimizer.Adam(learning_rate=0.001)
 
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
-epochs = 1
+epochs = 12
 batch_size = 32
 
 history = model.fit(train_images, train_labels, batch_size=batch_size, epochs=epochs)
