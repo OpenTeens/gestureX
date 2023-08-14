@@ -177,7 +177,7 @@ def changeThickness(key):
     if disabled:
         return "DISABLED"
     global thickness
-    thickness = key
+    thickness = int(chr(key))
 
 def print_history(image):
     """
