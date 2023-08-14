@@ -259,4 +259,4 @@ def save(mode=0):
     if disabled:
         return "DISABLED"
 
-    cv.imwrite("output2.png", export(mode)[0])
+    cv.imwrite("output.png", export(mode)[0])

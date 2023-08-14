@@ -3,16 +3,11 @@ import cv2 as cv
 import threading
 import os
 import tkinter as tk
+import plugin.blackboard
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 generating_image = False
-
-
-def inp():
-    global name, window
-    name = input_entry.get()
-    window.destroy()
 
 
 def generate_image(name):
@@ -22,32 +17,37 @@ def generate_image(name):
     :return: True if success, False if failed
     """
 
-    global generating_image
-    RapidAPI_Key = os.getenv("RapidAPI_Key")
-    url = "https://dezgo.p.rapidapi.com/image2image"
-    prompt = f"draw a {name} with appropriate color"
-    negative_prompt = ""
-    filename = "input.png"
-
-    files = {'init_image': open(filename, 'rb')}
-    payload = {
-        "upscale": "1",
-        "prompt": prompt,
-        "steps": "30",
-        "sampler": "euler_a",
-        "negative_prompt": negative_prompt,
-        "model": "epic_diffusion_1_1",
-        "strength": "0.6",
-        "guidance": "7"
-    }
-    headers = {
-        "X-RapidAPI-Key": RapidAPI_Key,
-        "X-RapidAPI-Host": "dezgo.p.rapidapi.com"
-    }
-
     def helper():
+        global generating_image
+
         def gen_img():
             global generating_image
+            name = input_entry.get()
+            window.destroy()
+
+            RapidAPI_Key = os.getenv("RapidAPI_Key")
+            url = "https://dezgo.p.rapidapi.com/image2image"
+            prompt = f"draw a {name} with appropriate color"
+            negative_prompt = ""
+            filename = "output.png"
+
+            files = {'init_image': open(filename, 'rb')}
+            payload = {
+                "upscale": "1",
+                "prompt": prompt,
+                "steps": "30",
+                "sampler": "euler_a",
+                "negative_prompt": negative_prompt,
+                "model": "epic_diffusion_1_1",
+                "strength": "0.6",
+                "guidance": "7"
+            }
+            headers = {
+                "X-RapidAPI-Key": RapidAPI_Key,
+                "X-RapidAPI-Host": "dezgo.p.rapidapi.com"
+            }
+
+            plugin.blackboard.save(1)
 
             response = requests.post(url, data=payload, files=files, headers=headers)
             if response.status_code == 200:
@@ -57,10 +57,9 @@ def generate_image(name):
                 print(response.status_code)
             generating_image = False
 
-        global name, input_entry, window
         window = tk.Tk()
         window.title("stable diffusion关键词输入")
-        input_entry = tk.Entry(window, width=50)
+        input_entry = tk.Entry(window, width=40)
         input_entry.pack()
         submit_button = tk.Button(window, width=10, height=3, text="Submit", command=gen_img)
         clear_button = tk.Button(window, width=10, height=3, text="Clear",
