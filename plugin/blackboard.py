@@ -14,6 +14,7 @@ GRID_HEIGHT = (SCREEN_HEIGHT // GRID_SIZE) + 1
 disabled = False
 history = []
 grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
+pen_color = (0, 225, 0)
 
 
 def disable(d):
@@ -65,10 +66,12 @@ def distance(p1, p2):
         return 0
     return (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
 
-def chooseColor(color):
+def draw_color(color):
+    if disabled:
+        return "DISABLED"
     # blue, green red
     if color == "Purple":
-        return (255, 0, 255)
+       return (255, 0, 255)
     elif color == "Blue":
         return (255, 0, 0)
     elif color == "Green":
@@ -80,7 +83,7 @@ def chooseColor(color):
     elif color == "Pink":
         return (203, 192, 255)
 def draw_button(image, y, color):
-    color_of_button = chooseColor(color)
+    color_of_button = draw_color(color)
     if disabled:
         return "DISABLED"
     right_bound = 170
@@ -95,22 +98,43 @@ def draw_all_buttons(image):
     draw_button(image, 350, "Yellow")
     draw_button(image, 400, "Pink")
 
-def is_point_in_rectangle(x, y, rect):
-    rect_left, rect_top, rect_right, rect_bottom = rect
-    if rect_left <= x <= rect_right and rect_top <= y <= rect_bottom:
-        return True
-    return False
 
-def isPressed():
+def inRect(x, y, left_top, right_bottom):
     if disabled:
         return "DISABLED"
 
-    return "Purple"
+    if left_top[0] <= x <= right_bottom[0] and left_top[1] <= y <= right_bottom[1]:
+        return True
 
+    return False
 
-def print_history(image):
-    color_string = isPressed()
-    color_tuple = chooseColor(color_string)
+def choose_color(pos, id):
+    if disabled:
+        return "DISABLED"
+
+    x, y = pos
+
+    if id != 4:
+        print("ID ", id)
+        return
+
+    print("clicking finger ", id)
+    global pen_color
+    # blue, green red
+    if inRect(x, y, (50, 150), (170, 150 + 50)):
+        pen_color = (255, 0, 255)
+    elif inRect(x, y, (50, 200), (170, 200 + 50)):
+        pen_color = (255, 0, 0)
+    elif inRect(x, y, (50, 250), (170, 250 + 50)):
+        pen_color = (0, 255, 0)
+    elif inRect(x, y, (50, 300), (170, 300 + 50)):
+        pen_color = (0, 0, 255)
+    elif inRect(x, y, (50, 350), (170, 350 + 50)):
+        pen_color = (0, 255, 255)
+    elif inRect(x, y, (50, 400), (170, 400 + 50)):
+        pen_color = (203, 192, 255)
+
+def print_history(image, pos, id):
     """
     Print pen trace on screen.
     :param image: cv image
@@ -119,6 +143,7 @@ def print_history(image):
     if disabled:
         return "DISABLED"
 
+    choose_color(pos, id)
     last_h = None
     for i in range(len(history)):
         h = history[i]
@@ -137,7 +162,7 @@ def print_history(image):
             continue
         if last_h is not None:
             # change the color of the open
-            cv.line(image, tuple(last_h), tuple(h), color_tuple, 3)
+            cv.line(image, tuple(last_h), tuple(h), pen_color, 3)
         last_h = h
 
 
