@@ -59,10 +59,10 @@ Tracking confidence threshold (Default：0.5)
 │  ├─cnn_model
 │  │  │  dataCNN
 │  │  │  cnn_labels.json
-│  │  │  cnn.hdf5
+│  │  │  cnn.py
 │  │  │  getdata.py
-│  │  │  make_labels.py
-│  │  └─ preprocess.py
+│  │  │  load_model.py
+│  │  └─ make_labels.py
 │  │ 
 │  │ blackboard.py
 │  │ keyboard.py
