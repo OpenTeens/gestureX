@@ -2,10 +2,17 @@ import requests
 import cv2 as cv
 import threading
 import os
+import tkinter as tk
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 generating_image = False
+
+
+def inp():
+    global name, window
+    name = input_entry.get()
+    window.destroy()
 
 
 def generate_image(name):
@@ -39,14 +46,28 @@ def generate_image(name):
     }
 
     def helper():
-        global generating_image
-        response = requests.post(url, data=payload, files=files, headers=headers)
-        if response.status_code == 200:
-            with open("result.png", "wb") as file:
-                file.write(response.content)
-        else:
-            print(response.status_code)
-        generating_image = False
+        def gen_img():
+            global generating_image
+
+            response = requests.post(url, data=payload, files=files, headers=headers)
+            if response.status_code == 200:
+                with open("result.png", "wb") as file:
+                    file.write(response.content)
+            else:
+                print(response.status_code)
+            generating_image = False
+
+        global name, input_entry, window
+        window = tk.Tk()
+        window.title("stable diffusion关键词输入")
+        input_entry = tk.Entry(window, width=50)
+        input_entry.pack()
+        submit_button = tk.Button(window, width=10, height=3, text="Submit", command=gen_img)
+        clear_button = tk.Button(window, width=10, height=3, text="Clear",
+                                 command=lambda: input_entry.delete(0, tk.END))
+        submit_button.pack()
+        clear_button.pack()
+        window.mainloop()
 
     generating_image = True
     threading.Thread(target=helper).start()

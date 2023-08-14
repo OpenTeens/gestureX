@@ -95,6 +95,12 @@ def draw_all_buttons(image):
     draw_button(image, 350, "Yellow")
     draw_button(image, 400, "Pink")
 
+def is_point_in_rectangle(x, y, rect):
+    rect_left, rect_top, rect_right, rect_bottom = rect
+    if rect_left <= x <= rect_right and rect_top <= y <= rect_bottom:
+        return True
+    return False
+
 def isPressed():
     if disabled:
         return "DISABLED"
