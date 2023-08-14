@@ -58,8 +58,8 @@ def prepare_data(image_label_mapping, target_size):
     return images, categories
 
 
-images_folder = 'dataCNN'
-json_path = 'cnn_labels.json'
+images_folder = 'plugin/cnn_model/dataCNN'
+json_path = 'plugin/cnn_model/cnn_labels.json'
 target_size = (224, 224)
 
 json_data = load_json(json_path)
@@ -95,7 +95,7 @@ opt = keras_legacy_optimizer.Adam(learning_rate=0.001)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
 # epochs = 12
-epochs = 3
+epochs = 4
 batch_size = 32
 
 history = model.fit(train_images, train_labels, batch_size=batch_size, epochs=epochs)
@@ -106,7 +106,7 @@ test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print("Test Loss:", test_loss)
 print("Test Accuracy:", test_accuracy)
 
-# model.save("../Desktop/model.keras", save_format='keras')
+model.save("plugin/cnn_model/model.keras", save_format='keras')
 
 
 # Making prdictions based on the image
