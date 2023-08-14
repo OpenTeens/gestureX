@@ -179,6 +179,9 @@ def print_history(image):
     :param image: cv image
     :return: None
     """
+
+    thickness = 3
+
     if disabled:
         return "DISABLED"
 
@@ -203,7 +206,7 @@ def print_history(image):
             continue
         if last_h is not None:
             # change the color of the open
-            cv.line(image, tuple(last_h), tuple(h), paras[0], 3)
+            cv.line(image, tuple(last_h), tuple(h), paras[0], thickness)
         last_h = h
 
 
