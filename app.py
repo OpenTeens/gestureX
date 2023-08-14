@@ -286,6 +286,7 @@ def main():
         plugin.UI.buttons(debug_image)
 
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
+        plugin.blackboard.draw_all_buttons(debug_image)
         plugin.blackboard.print_history(debug_image)
         plugin.mouse.print_touchboard(debug_image)
         if pos:
