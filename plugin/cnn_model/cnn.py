@@ -101,6 +101,6 @@ test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print("Test Loss:", test_loss)
 print("Test Accuracy:", test_accuracy)
 
-model.save("model.keras", save_format='keras')
+# model.save("model.keras", save_format='keras')
 
 

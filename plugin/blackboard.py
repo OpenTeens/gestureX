@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import cv2 as cv
 
 # CONSTANTS
 GRID_SIZE = 20  # px
@@ -64,8 +65,46 @@ def distance(p1, p2):
         return 0
     return (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
 
+def chooseColor(color):
+    # blue, green red
+    if color == "Purple":
+        return (255, 0, 255)
+    elif color == "Blue":
+        return (255, 0, 0)
+    elif color == "Green":
+        return (0, 255, 0)
+    elif color == "Red":
+        return (0, 0, 255)
+    elif color == "Yellow":
+        return (0, 255, 255)
+    elif color == "Pink":
+        return (203, 192, 255)
+def draw_button(image, y, color):
+    color_of_button = chooseColor(color)
+    if disabled:
+        return "DISABLED"
+    right_bound = 170
+    cv.putText(image, color, (70, y + 25), cv.FONT_HERSHEY_SIMPLEX, 0.7, color_of_button, 2, cv.LINE_AA)
+    cv.rectangle(image, (50, y), (right_bound, y + 50), (0, 0, 0), 2)
+
+def draw_all_buttons(image):
+    draw_button(image, 150, "Purple")
+    draw_button(image, 200, "Blue")
+    draw_button(image, 250, "Green")
+    draw_button(image, 300, "Red")
+    draw_button(image, 350, "Yellow")
+    draw_button(image, 400, "Pink")
+
+def isPressed():
+    if disabled:
+        return "DISABLED"
+
+    return "Purple"
+
 
 def print_history(image):
+    color_string = isPressed()
+    color_tuple = chooseColor(color_string)
     """
     Print pen trace on screen.
     :param image: cv image
@@ -91,7 +130,8 @@ def print_history(image):
 
             continue
         if last_h is not None:
-            cv.line(image, tuple(last_h), tuple(h), (0, 225, 0), 3)
+            # change the color of the open
+            cv.line(image, tuple(last_h), tuple(h), color_tuple, 3)
         last_h = h
 
 
@@ -201,7 +241,7 @@ def export(mode=0):
 
         cv.line(image, last_h, h, (0, 0, 0), 3)  # draw line (black)
         last_h = h
-
+        # cv: blue, green, red
     return image, p1
 
 
