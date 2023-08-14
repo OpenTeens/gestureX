@@ -6,3 +6,4 @@
 |  Keyboard          |  @YangZhen          |  Done
 |  Shape Reco        |  @CJWZhang          |  Testing
 |  Stable Diffusion  |  @Richard           |  Developing
+|  Text Pad          |  @CJWZhang          |  Developing
