@@ -138,12 +138,14 @@ def main():
     finger_gesture_history = deque(maxlen=history_length)
 
     #  ########################################################################
-    mode = 0
+    mode = 0    # origin code
     mouse_pressed_down = False
     button_pressed_down = False
-    pos = None
+    sd_last_pos = None  # stable diffusion
+
     if os.path.exists("result.png"):
         os.remove("result.png")
+
     while True:
         fps = cvFpsCalc.get()
 
@@ -170,7 +172,7 @@ def main():
         if key == 115:  # s for save
             plugin.blackboard.save()
         if key == 100:  # d for diffusion
-            img, pos = plugin.blackboard.export(1)
+            img, sd_last_pos = plugin.blackboard.export(1)
             cv.imwrite("sd_input.png", img)
             plugin.stablediffusion.generate_image()
         number, mode = select_mode(key, mode)
@@ -280,9 +282,7 @@ def main():
         plugin.blackboard.print_history(debug_image)
         plugin.blackboard.choose_color(landmark_list[8] if detected_hand else [0, 0])
         plugin.mouse.print_touchboard(debug_image)
-
-        if pos:
-            plugin.stablediffusion.render_image_overlay(debug_image, pos)
+        plugin.stablediffusion.render_image_overlay(debug_image, sd_last_pos)
 
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
