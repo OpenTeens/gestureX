@@ -1,13 +1,17 @@
 import json
 import numpy as np
 from PIL import Image
+from tensorflow import keras
 import os
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D, BatchNormalization, Input, Activation, Reshape
-from tensorflow.keras.optimizers.legacy import Adam
+from tensorflow.keras.optimizers import legacy as keras_legacy_optimizer
+from tensorflow.keras.layers import Reshape
 import tensorflow as tf
+from tensorflow import keras
+import pickle
 
 def preprocess_image(image_path, target_size):
     image = Image.open(image_path)
@@ -64,38 +68,29 @@ images, labels = prepare_data(image_label_mapping, target_size)
 
 train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2, random_state=42)
 
-print(train_images.shape)
 
-model = Sequential()
-model.add(Reshape((70, 70, 1), input_shape=(244, 244, 3)))
-model.add(Conv2D(70, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.3))
+model = tf.keras.Sequential([
+    tf.keras.layers.Conv2D(filters=64, kernel_size=7, input_shape=[224, 224, 3]),
+    tf.keras.layers.MaxPooling2D(pool_size=2),
+    tf.keras.layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding="SAME"),
+    tf.keras.layers.MaxPooling2D(pool_size=2),
+    tf.keras.layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding="SAME"),
+    tf.keras.layers.MaxPooling2D(pool_size=2),
+    tf.keras.layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding="SAME"),
+    tf.keras.layers.MaxPooling2D(pool_size=2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(units=128, activation='relu'),
+    tf.keras.layers.Dropout(0.3),
+    tf.keras.layers.Dense(units=64, activation='relu'),
+    tf.keras.layers.Dropout(0.3),
+    tf.keras.layers.Dense(units=3, activation='softmax'),
+])
 
-model.add(Conv2D(70, (3, 3), padding='same'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Activation('relu'))
-
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(70, (3, 3), padding='same'))
-model.add(Activation('relu'))
-
-model.add(Dropout(0.3))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Activation('relu'))
-
-model.add(Flatten())
-model.add(Dense(200))
-model.add(Activation('relu'))
-model.add(Dense(4))
-model.add(Activation('softmax'))
-#
-opt = Adam(learning_rate=0.001)
+opt = keras_legacy_optimizer.Adam(learning_rate=0.001)
 
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
-epochs = 25
+epochs = 1
 batch_size = 32
 
 history = model.fit(train_images, train_labels, batch_size=batch_size, epochs=epochs)
@@ -105,7 +100,7 @@ print(history)
 test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print("Test Loss:", test_loss)
 print("Test Accuracy:", test_accuracy)
-print("Test Accuracy:", test_accuracy)
 
-model_save_path = 'cnn.hdf5'
-model = tf.keras.models.load_model(model_save_path)
+model.save("model.keras", save_format='keras')
+
+
