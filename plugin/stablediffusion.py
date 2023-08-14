@@ -1,5 +1,6 @@
 import requests
 import cv2 as cv
+import time
 import os
 
 def generate_image(name):
@@ -38,3 +39,26 @@ def generate_image(name):
     else:
         print(response.status_code)
         return False
+def clear():
+    """
+    Clear image by deleting the file
+    :return: None
+    """
+    os.remove("result.png")
+def render_image_overlay(background, pos, scale = 1):
+    """
+    Overlay the stable diffusion image on webcam
+    :param background: webcam/cv input
+    :param pos: top left position of overlaying image
+    :return: if failed
+    """
+    if not os.path.exists("result.png"):
+        return
+    else:
+        img = cv.imread("result.png")
+    x=pos[0]
+    y=pos[1]
+    img=cv.resize(img,(0,0),fx=scale,fy=scale)
+    for i in range(len(img)):
+        for j in range(len(img[0])):
+            background[y+i][j+x] = img[i][j]

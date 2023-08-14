@@ -41,6 +41,7 @@ import plugin.blackboard
 import plugin.mouse
 import plugin.keyboard
 import plugin.UI
+import plugin.stablediffusion
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
@@ -140,7 +141,7 @@ def main():
     mode = 0
     mouse_pressed_down = False
     button_pressed_down = False
-
+    pos = ""
     while True:
         fps = cvFpsCalc.get()
 
@@ -155,14 +156,15 @@ def main():
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.erase
         if key == 99:  # c for clear
             plugin.blackboard.clear()
+            plugin.stablediffusion.clear()
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
         if key == 115:  # s for save
             plugin.blackboard.save()
         if key == 100:  # d for diffusion
-            exported = plugin.blackboard.export(1)
-            cv.imwrite("output2.png", exported[0])
-            print(exported[1])
-
+            img,pos = plugin.blackboard.export(1)
+            print(pos)
+            cv.imwrite("input.png", img)
+            plugin.stablediffusion.generate_image("fish")
         number, mode = select_mode(key, mode)
 
         # 相机捕获 #####################################################
@@ -275,7 +277,8 @@ def main():
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.print_history(debug_image)
         plugin.mouse.print_touchboard(debug_image)
-
+        if pos:
+            plugin.stablediffusion.render_image_overlay(debug_image,pos)
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
 

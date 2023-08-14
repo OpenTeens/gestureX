@@ -168,6 +168,11 @@ def export(mode=0):
         p2[1] = max(p2[1], h[1])
 
     # Calculate image size.
+    p1[0] = max(0,p1[0] - 20)
+    p1[1] = max(0,p1[1] - 20)
+    p2[0] = min(SCREEN_WIDTH, p2[0] + 20)
+    p2[1] = min(SCREEN_HEIGHT, p2[1] + 20)
+
     img_width = p2[0] - p1[0]
     img_height = p2[1] - p1[1]
     delta = (img_width - img_height) // 2
