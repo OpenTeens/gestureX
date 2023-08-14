@@ -144,7 +144,8 @@ def main():
     button_pressed_down = False
     pos = ""
     generate = 0 #generate image 0 is false, 3 is true
-    os.remove("result.png")
+    if os.path.exists("result.png"):
+        os.remove("result.png")
     while True:
         fps = cvFpsCalc.get()
 
@@ -286,6 +287,7 @@ def main():
         plugin.UI.buttons(debug_image)
 
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
+        plugin.blackboard.draw_all_buttons(debug_image)
         plugin.blackboard.print_history(debug_image)
         plugin.mouse.print_touchboard(debug_image)
         if pos:
