@@ -9,9 +9,10 @@ def generate_image(name):
     :param name: name of the drawn object 
     :return: True if success, False if failed
     """
+    os.environ["RapidAPI_Key"] = "cb471ed932msh450278f2d7a8b04p132186jsn56f926ff717b"
     RapidAPI_Key = os.getenv("RapidAPI_Key")
     url = "https://dezgo.p.rapidapi.com/image2image"
-    prompt = f"draw a {name} with appropriate color"
+    prompt = f"draw a {name} with approiate color"
     negative_prompt = ""
     filename = "input.png"
 
