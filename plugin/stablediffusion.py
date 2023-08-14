@@ -2,17 +2,22 @@ import requests
 import cv2 as cv
 import time
 import os
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
 
-def generate_image(name):
+def loading(img):
+    cv.putText(img, "Generating...", (int(SCREEN_WIDTH/6),int(SCREEN_HEIGHT/2 )),
+                           cv.FONT_HERSHEY_SIMPLEX, 5, (225, 225, 225), 5, cv.LINE_AA)
+def generate_image(name,img):
     """
     Generate stable diffusion image using blackboard sketch
     :param name: name of the drawn object 
     :return: True if success, False if failed
     """
-    os.environ["RapidAPI_Key"] = "cb471ed932msh450278f2d7a8b04p132186jsn56f926ff717b"
+
     RapidAPI_Key = os.getenv("RapidAPI_Key")
     url = "https://dezgo.p.rapidapi.com/image2image"
-    prompt = f"draw a {name} with approiate color"
+    prompt = f"draw a {name} with appropriate color"
     negative_prompt = ""
     filename = "input.png"
 
@@ -45,7 +50,8 @@ def clear():
     Clear image by deleting the file
     :return: None
     """
-    os.remove("result.png")
+    if os.path.exists("result.png"):
+        os.remove("result.png")
 def render_image_overlay(background, pos, scale = 1):
     """
     Overlay the stable diffusion image on webcam
