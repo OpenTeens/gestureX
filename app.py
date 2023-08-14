@@ -201,6 +201,7 @@ def main():
                 # 计算手指坐标
                 landmark_list, landmark2 = calc_landmark_list(debug_image, hand_landmarks)
 
+
                 # plugin
                 blackboard_fn(landmark_list[8])  # finger No.8
                 clicked_key = plugin.keyboard.check_on_keys(landmark_list[8])
@@ -214,10 +215,14 @@ def main():
                 # 手势分类
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
 
+                plugin.blackboard.print_history(debug_image, landmark_list[8], hand_sign_id)
+
                 # if(300 < landmark_list[8][0] < 1000 and 40 < landmark_list[8][1] < 400):
                 #    plugin.mouse.move_to(landmark_list[8])
 
                 plugin.mouse.move_to(landmark_list[8])
+
+                plugin.blackboard.choose_color(landmark_list[8], hand_sign_id)
 
                 if hand_sign_id == 4:  # 4: click
                     if not button_pressed_down:
@@ -288,7 +293,6 @@ def main():
 
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.draw_all_buttons(debug_image)
-        plugin.blackboard.print_history(debug_image)
         plugin.mouse.print_touchboard(debug_image)
         if pos:
             plugin.stablediffusion.render_image_overlay(debug_image,pos)
