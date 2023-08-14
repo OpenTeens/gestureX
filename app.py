@@ -42,12 +42,14 @@ import plugin.mouse
 import plugin.keyboard
 import plugin.UI
 import plugin.stablediffusion
+import plugin.text_pad
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
 plugin.mouse.disable(True)
 plugin.keyboard.disable(True)
 plugin.blackboard.disable(True)
+plugin.text_pad(True)
 
 
 def get_args():

@@ -1,6 +1,7 @@
 |  FEATURE           |  DEVELOPER          |  STATE
 +--------------------+---------------------+-----------
 |  Blackboard        |  @BernieHuang2008   |  Done
+|  Blackboard(c + t) |  @CJWZhang          |  Testing (missing the stick with thickness)
 |  Mouse Control     |  @YangZhen          |  Done
 |  Keyboard          |  @YangZhen          |  Done
 |  Shape Reco        |  @CJWZhang          |  Testing
