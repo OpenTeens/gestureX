@@ -2,13 +2,36 @@ import requests
 import cv2 as cv
 import time
 import os
+import threading
+import  tkinter as tk
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
 def loading(img):
     cv.putText(img, "Generating...", (int(SCREEN_WIDTH/6),int(SCREEN_HEIGHT/2 )),
                            cv.FONT_HERSHEY_SIMPLEX, 5, (225, 225, 225), 5, cv.LINE_AA)
-def generate_image(name,img):
+
+def inp():
+    global name, window
+    name = input_entry.get()
+    window.destroy()
+
+def threading_starter():
+    def inputer():
+        global name, input_entry, window
+        window = tk.Tk()
+        window.title("stable diffusion关键词输入")
+        input_entry = tk.Entry(window, width=50)
+        input_entry.pack()
+        submit_button = tk.Button(window, width=10, height=3, text="Submit", command=inp)
+        clear_button = tk.Button(window, width=10, height=3, text="Clear",
+                                 command=lambda: input_entry.delete(0, tk.END))
+        submit_button.pack()
+        clear_button.pack()
+        window.mainloop()
+    threading.Thread(target=inputer).run()
+
+def generate_image(name, img):
     """
     Generate stable diffusion image using blackboard sketch
     :param name: name of the drawn object 
