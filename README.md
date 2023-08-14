@@ -55,6 +55,22 @@ Tracking confidence threshold (Default：0.5)
 │      │  point_history_classifier.py
 │      │  point_history_classifier.tflite
 │      └─ point_history_classifier_label.csv
+├─plugin
+│  ├─cnn_model
+│  │  │  dataCNN
+│  │  │  cnn_labels.json
+│  │  │  cnn.hdf5
+│  │  │  getdata.py
+│  │  │  make_labels.py
+│  │  └─ preprocess.py
+│  │ 
+│  │ blackboard.py
+│  │ keyboard.py
+│  │ mouse.py
+│  │ stablediffusion.py
+│  │ UI.py         
+│  └─point_history_classifier
+│     
 │          
 └─utils
     └─cvfpscalc.py
@@ -86,6 +102,15 @@ The following files are stored.
 * Label data(point_history_classifier_label.csv)
 * Inference module(point_history_classifier.py)
 
+### model/point_history_classifier
+This is directory stores the different functions as plugins that will be inserted in app.py.<br>
+The following folders/files are stored.
+* cnn_model
+* blackboard.py
+* keyboard.py
+* mouse.py
+* stablediffusion.py
+* UI.py
 ### utils/cvfpscalc.py
 This is a module for FPS measurement.
 
