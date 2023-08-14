@@ -15,7 +15,6 @@ PLUGIN USAGE:
    - press 'c' to clear the board
 
 """
-import sys
 import os
 
 print("Loading Plugins ... ")
@@ -142,8 +141,7 @@ def main():
     mode = 0
     mouse_pressed_down = False
     button_pressed_down = False
-    pos = ""
-    generate = 0 #generate image 0 is false, 3 is true
+    pos = None
     if os.path.exists("result.png"):
         os.remove("result.png")
     while True:
@@ -155,14 +153,7 @@ def main():
             break
         image = cv.flip(image, 1)  # 镜面显示
         debug_image = copy.deepcopy(image)
-        #stable diffusion #########################
-        #循环三次因为一次的话，generating的字还没load出来，就卡住了
-        if generate > 0:
-            if generate == 3:
-                plugin.stablediffusion.generate_image("fish",debug_image)
-                generate = 0
-            else:
-                generate += 1
+
         # 按键处理(ESC：终止) #################################################
         key = cv.waitKey(10)
 
@@ -179,13 +170,11 @@ def main():
         if key == 115:  # s for save
             plugin.blackboard.save()
         if key == 100:  # d for diffusion
-            img,pos = plugin.blackboard.export(1)
-            print(pos)
-            cv.imwrite("input.png", img)
-            plugin.stablediffusion.loading(debug_image)
-            generate = 1
+            img, pos = plugin.blackboard.export(1)
+            cv.imwrite("sd_input.png", img)
+            plugin.stablediffusion.generate_image()
         number, mode = select_mode(key, mode)
-            
+
         # 检测实施 #############################################################
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
@@ -194,12 +183,13 @@ def main():
         image.flags.writeable = True
 
         #  ####################################################################
-        if results.multi_hand_landmarks is not None:
+        detected_hand = results.multi_hand_landmarks
+        if detected_hand is not None:
             for hand_landmarks, handedness in zip(results.multi_hand_landmarks, results.multi_handedness):
                 # 计算边界矩形
                 # brect = calc_bounding_rect(debug_image, hand_landmarks)
                 # 计算手指坐标
-                landmark_list, landmark2 = calc_landmark_list(debug_image, hand_landmarks)
+                landmark_list = calc_landmark_list(debug_image, hand_landmarks)
 
                 # plugin
                 blackboard_fn(landmark_list[8])  # finger No.8
@@ -256,7 +246,7 @@ def main():
                     blackboard_fn = plugin.blackboard.none
 
                     if len(plugin.blackboard.history) != 0 and plugin.blackboard.history[-1][0] is not None:
-                        plugin.blackboard.history.append([None, None])  # 断开
+                        plugin.blackboard.pen([None, None])  # 断开
 
                     plugin.keyboard.release()
 
@@ -283,18 +273,17 @@ def main():
 
         debug_image = draw_info(debug_image, fps, mode, number)
 
-        # 显示按钮 #############################################################
+        # plugin显示 #############################################################
         plugin.UI.buttons(debug_image)
-
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.draw_all_buttons(debug_image)
         plugin.blackboard.print_history(debug_image)
+        plugin.blackboard.choose_color(landmark_list[8] if detected_hand else [0, 0])
         plugin.mouse.print_touchboard(debug_image)
+
         if pos:
-            plugin.stablediffusion.render_image_overlay(debug_image,pos)
-        #stable diffusion显示generating
-        if generate>0 and generate<3:
-            plugin.stablediffusion.loading(debug_image)
+            plugin.stablediffusion.render_image_overlay(debug_image, pos)
+
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
 
@@ -337,18 +326,16 @@ def calc_landmark_list(image, landmarks):
     image_width, image_height = image.shape[1], image.shape[0]
 
     landmark_point = []
-    lm2 = []
 
     # 手指坐标
     for _, landmark in enumerate(landmarks.landmark):
         landmark_x = min(int(landmark.x * image_width), image_width - 1)
         landmark_y = min(int(landmark.y * image_height), image_height - 1)
-        landmark_z = landmark.z * 10
+        # landmark_z = landmark.z * 10
 
         landmark_point.append([landmark_x, landmark_y])
-        lm2.append([landmark_x, landmark_y, landmark_z])
 
-    return landmark_point, lm2
+    return landmark_point
 
 
 def pre_process_landmark(landmark_list):
@@ -556,6 +543,8 @@ def draw_bounding_rect(use_brect, image, brect):
 def draw_info(image, fps, mode, number):
     cv.putText(image, "FPS:" + str(fps), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
     cv.putText(image, "FPS:" + str(fps), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2, cv.LINE_AA)
+    if plugin.stablediffusion.generating_image:
+        cv.putText(image, "Generating ... ", (10, 60), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 225), 2, cv.LINE_AA)
 
     mode_string = ['Logging Key Point', 'Logging Point History']
     if 1 <= mode <= 2:

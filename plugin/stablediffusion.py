@@ -10,16 +10,15 @@ SCREEN_HEIGHT = 720
 generating_image = False
 
 
-def generate_image(name):
+def generate_image():
     """
     Generate stable diffusion image using blackboard sketch
-    :param name: name of the drawn object
-    :return: True if success, False if failed
+    :return: None
     """
 
-    def helper():
-        global generating_image
+    global generating_image
 
+    def helper():
         def gen_img():
             global generating_image
             name = input_entry.get()
@@ -29,7 +28,7 @@ def generate_image(name):
             url = "https://dezgo.p.rapidapi.com/image2image"
             prompt = f"draw a {name} with appropriate color"
             negative_prompt = ""
-            filename = "output.png"
+            filename = "sd_input.png"
 
             files = {'init_image': open(filename, 'rb')}
             payload = {
@@ -88,10 +87,12 @@ def render_image_overlay(background, pos, scale=1):
     :param pos: top left position of overlaying image
     :return: if failed
     """
+
     if not os.path.exists("result.png"):
         return
     else:
         img = cv.imread("result.png")
+
     x = pos[0]
     y = pos[1]
     img = cv.resize(img, (0, 0), fx=scale, fy=scale)
