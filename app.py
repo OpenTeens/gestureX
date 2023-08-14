@@ -16,6 +16,7 @@ PLUGIN USAGE:
 
 """
 import sys
+import os
 
 print("Loading Plugins ... ")
 
@@ -142,9 +143,25 @@ def main():
     mouse_pressed_down = False
     button_pressed_down = False
     pos = ""
+    generate = 0 #generate image 0 is false, 3 is true
+    os.remove("result.png")
     while True:
         fps = cvFpsCalc.get()
 
+        # 相机捕获 #####################################################
+        ret, image = cap.read()
+        if not ret:
+            break
+        image = cv.flip(image, 1)  # 镜面显示
+        debug_image = copy.deepcopy(image)
+        #stable diffusion #########################
+        #循环三次因为一次的话，generating的字还没load出来，就卡住了
+        if generate > 0:
+            if generate == 3:
+                plugin.stablediffusion.generate_image("fish",debug_image)
+                generate = 0
+            else:
+                generate += 1
         # 按键处理(ESC：终止) #################################################
         key = cv.waitKey(10)
 
@@ -164,16 +181,10 @@ def main():
             img,pos = plugin.blackboard.export(1)
             print(pos)
             cv.imwrite("input.png", img)
-            plugin.stablediffusion.generate_image("fish")
+            plugin.stablediffusion.loading(debug_image)
+            generate = 1
         number, mode = select_mode(key, mode)
-
-        # 相机捕获 #####################################################
-        ret, image = cap.read()
-        if not ret:
-            break
-        image = cv.flip(image, 1)  # 镜面显示
-        debug_image = copy.deepcopy(image)
-
+            
         # 检测实施 #############################################################
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
@@ -279,6 +290,9 @@ def main():
         plugin.mouse.print_touchboard(debug_image)
         if pos:
             plugin.stablediffusion.render_image_overlay(debug_image,pos)
+        #stable diffusion显示generating
+        if generate>0 and generate<3:
+            plugin.stablediffusion.loading(debug_image)
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
 
