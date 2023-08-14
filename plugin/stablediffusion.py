@@ -1,20 +1,28 @@
 import requests
 import cv2 as cv
-import time
+import threading
 import os
+import tkinter as tk
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+generating_image = False
 
-def loading(img):
-    cv.putText(img, "Generating...", (int(SCREEN_WIDTH/6),int(SCREEN_HEIGHT/2 )),
-                           cv.FONT_HERSHEY_SIMPLEX, 5, (225, 225, 225), 5, cv.LINE_AA)
-def generate_image(name,img):
+
+def inp():
+    global name, window
+    name = input_entry.get()
+    window.destroy()
+
+
+def generate_image(name):
     """
     Generate stable diffusion image using blackboard sketch
-    :param name: name of the drawn object 
+    :param name: name of the drawn object
     :return: True if success, False if failed
     """
 
+    global generating_image
     RapidAPI_Key = os.getenv("RapidAPI_Key")
     url = "https://dezgo.p.rapidapi.com/image2image"
     prompt = f"draw a {name} with appropriate color"
@@ -37,14 +45,34 @@ def generate_image(name,img):
         "X-RapidAPI-Host": "dezgo.p.rapidapi.com"
     }
 
-    response = requests.post(url, data=payload,files=files, headers=headers)
-    if response.status_code == 200:
-        with open("result.png","wb") as file:
-            file.write(response.content)
-        return True
-    else:
-        print(response.status_code)
-        return False
+    def helper():
+        def gen_img():
+            global generating_image
+
+            response = requests.post(url, data=payload, files=files, headers=headers)
+            if response.status_code == 200:
+                with open("result.png", "wb") as file:
+                    file.write(response.content)
+            else:
+                print(response.status_code)
+            generating_image = False
+
+        global name, input_entry, window
+        window = tk.Tk()
+        window.title("stable diffusion关键词输入")
+        input_entry = tk.Entry(window, width=50)
+        input_entry.pack()
+        submit_button = tk.Button(window, width=10, height=3, text="Submit", command=gen_img)
+        clear_button = tk.Button(window, width=10, height=3, text="Clear",
+                                 command=lambda: input_entry.delete(0, tk.END))
+        submit_button.pack()
+        clear_button.pack()
+        window.mainloop()
+
+    generating_image = True
+    threading.Thread(target=helper).start()
+
+
 def clear():
     """
     Clear image by deleting the file
@@ -52,7 +80,9 @@ def clear():
     """
     if os.path.exists("result.png"):
         os.remove("result.png")
-def render_image_overlay(background, pos, scale = 1):
+
+
+def render_image_overlay(background, pos, scale=1):
     """
     Overlay the stable diffusion image on webcam
     :param background: webcam/cv input
@@ -63,9 +93,9 @@ def render_image_overlay(background, pos, scale = 1):
         return
     else:
         img = cv.imread("result.png")
-    x=pos[0]
-    y=pos[1]
-    img=cv.resize(img,(0,0),fx=scale,fy=scale)
+    x = pos[0]
+    y = pos[1]
+    img = cv.resize(img, (0, 0), fx=scale, fy=scale)
     for i in range(len(img)):
         for j in range(len(img[0])):
-            background[y+i][j+x] = img[i][j]
+            background[y + i][j + x] = img[i][j]
