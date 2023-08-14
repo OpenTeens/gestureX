@@ -157,6 +157,8 @@ def main():
         # 按键处理(ESC：终止) #################################################
         key = cv.waitKey(10)
 
+        if 49 <= key <= 58:
+            plugin.blackboard.changeThickness(key)
         if key == 27:  # ESC
             break
         if key == 112:  # p for pen
