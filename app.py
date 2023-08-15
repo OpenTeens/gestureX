@@ -42,6 +42,7 @@ import plugin.mouse
 import plugin.keyboard
 import plugin.UI
 import plugin.stablediffusion
+import plugin.cnn_model.load_model
 
 blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
 
@@ -176,6 +177,11 @@ def main():
             img, sd_last_pos = plugin.blackboard.export(1)
             cv.imwrite("sd_input.png", img)
             plugin.stablediffusion.generate_image()
+        if key == 83: # s for shape
+            img, sd_last_pos = plugin.blackboard.export(1)
+            cv.imwrite("cnn_input.png", img)
+            plugin.cnn_model.load_model.generate_shape()
+
         number, mode = select_mode(key, mode)
 
         # 检测实施 #############################################################
