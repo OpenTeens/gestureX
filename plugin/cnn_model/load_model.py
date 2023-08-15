@@ -8,7 +8,9 @@ target_size = (224, 224)
 
 labels = {0: 'Ellipse', 1: 'Rectangle', 2:'Triangle'}
 
-path = 'plugin/cnn_model/test.png' # path of the image you are testing
+
+pname = 'tri.png'
+path = f'plugin/cnn_model/{pname}' # path of the image you are testing
 
 input_data = Image.open(path).resize(target_size)
 input_data = input_data.convert('RGB')
