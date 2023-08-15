@@ -173,11 +173,13 @@ def choose_color(pos):
     elif inRect(x, y, (50, 400), (170, 400 + 50)):
         pen_color = (203, 192, 255)
 
+
 def changeThickness(key):
     if disabled:
         return "DISABLED"
     global thickness
     thickness = int(chr(key))
+
 
 def print_history(image):
     """
@@ -210,7 +212,6 @@ def print_history(image):
             continue
         if last_h is not None:
             # change the color of the open
-            print(thickness)
             cv.line(image, tuple(last_h), tuple(h), paras[0], thickness)
         last_h = h
 

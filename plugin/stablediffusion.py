@@ -96,8 +96,8 @@ def render_image_overlay(background, pos, scale=1):
     x = pos[0]
     y = pos[1]
     img = cv.resize(img, (0, 0), fx=scale, fy=scale)
-    print(x, x + img.shape[0], y, y + img.shape[1])
+    print(len(img), len(img[0]), img.shape[0], img.shape[1])
     background[x:x + img.shape[0], y:y + img.shape[1]] = img
     # for i in range(len(img)):
     #     for j in range(len(img[0])):
-    #         background[y + i][j + x] = img[i][j]
+    #         background[y + i][x + j] = img[i][j]
