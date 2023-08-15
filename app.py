@@ -286,7 +286,7 @@ def main():
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.draw_all_buttons(debug_image)
         plugin.blackboard.print_history(debug_image)
-        activated_f = plugin.blackboard.choose_color(landmark_list[8] if detected_hand else [0, 0])
+        activated_f = plugin.blackboard.choose_color(debug_image, landmark_list[8] if detected_hand else [0, 0])
         if activated_f:
             blackboard_fn_backup = blackboard_fn = activated_f
         plugin.mouse.print_touchboard(debug_image)
