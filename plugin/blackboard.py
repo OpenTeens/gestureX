@@ -93,6 +93,8 @@ def draw_color(color):
         return (0, 255, 255)
     elif color == "Pink":
         return (203, 192, 255)
+    elif color == "Eraser":
+        return (0, 0, 0)
 
 
 def draw_button(image, y, color):
@@ -127,6 +129,7 @@ def draw_all_buttons(image):
     draw_button(image, 300, "Red")
     draw_button(image, 350, "Yellow")
     draw_button(image, 400, "Pink")
+    draw_button(image, 450, "Eraser")
 
 
 def inRect(x, y, left_top, right_bottom):
@@ -151,10 +154,10 @@ def choose_color(pos):
     """
     Choose pen color.
     :param pos: finger pos
-    :return: None
+    :return: Activated Mode Function
     """
     if disabled:
-        return "DISABLED"
+        return None
 
     global pen_color
     x, y = pos
@@ -172,6 +175,11 @@ def choose_color(pos):
         pen_color = (0, 255, 255)
     elif inRect(x, y, (50, 400), (170, 400 + 50)):
         pen_color = (203, 192, 255)
+    elif inRect(x, y, (50, 450), (170, 450 + 50)):
+        return erase
+    else:
+        return None
+    return pen
 
 
 def changeThickness(key):
