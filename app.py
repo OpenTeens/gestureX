@@ -138,7 +138,7 @@ def main():
     finger_gesture_history = deque(maxlen=history_length)
 
     #  ########################################################################
-    mode = 0    # origin code
+    mode = 0  # origin code
     mouse_pressed_down = False
     button_pressed_down = False
     sd_last_pos = None  # stable diffusion
@@ -172,8 +172,6 @@ def main():
             plugin.blackboard.clear()
             plugin.stablediffusion.clear()
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
-        if key == 115:  # s for save
-            plugin.blackboard.save()
         if key == 100:  # d for diffusion
             img, sd_last_pos = plugin.blackboard.export(1)
             cv.imwrite("sd_input.png", img)
@@ -288,7 +286,9 @@ def main():
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.draw_all_buttons(debug_image)
         plugin.blackboard.print_history(debug_image)
-       
+        activated_f = plugin.blackboard.choose_color(landmark_list[8] if detected_hand else [0, 0])
+        if activated_f:
+            blackboard_fn_backup = blackboard_fn = activated_f
         plugin.mouse.print_touchboard(debug_image)
         plugin.stablediffusion.render_image_overlay(debug_image, sd_last_pos)
 

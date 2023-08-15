@@ -1,9 +1,10 @@
-import requests
-import cv2 as cv
-import threading
 import os
+import threading
 import tkinter as tk
+
+import cv2 as cv
 import plugin.blackboard
+import requests
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -96,8 +97,7 @@ def render_image_overlay(background, pos, scale=1):
     x = pos[0]
     y = pos[1]
     img = cv.resize(img, (0, 0), fx=scale, fy=scale)
-    print(len(img), len(img[0]), img.shape[0], img.shape[1])
-    background[x:x + img.shape[0], y:y + img.shape[1]] = img
     # for i in range(len(img)):
     #     for j in range(len(img[0])):
     #         background[y + i][x + j] = img[i][j]
+    background[y:y + len(img), x:x + len(img[0])] = img
