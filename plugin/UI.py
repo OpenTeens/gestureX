@@ -96,3 +96,4 @@ def reverse_status(status, color):
         color = (0, 0, 255)
 
     return status, color
+

@@ -147,7 +147,7 @@ def inRect(x, y, left_top, right_bottom):
     return False
 
 
-def choose_color(pos):
+def choose_color(debug_image, pos):
     """
     Choose pen color.
     :param pos: finger pos
@@ -162,8 +162,10 @@ def choose_color(pos):
     # blue, green red
     if inRect(x, y, (50, 150), (170, 150 + 50)):
         pen_color = (255, 0, 255)
+        cv.rectangle(debug_image, (50,150), (170, 200), (255,0,255), -1)
     elif inRect(x, y, (50, 200), (170, 200 + 50)):
         pen_color = (255, 0, 0)
+        cv.rectangle(debug_image, (50,200), (170, 250), (255,0,0), -1)
     elif inRect(x, y, (50, 250), (170, 250 + 50)):
         pen_color = (0, 255, 0)
     elif inRect(x, y, (50, 300), (170, 300 + 50)):

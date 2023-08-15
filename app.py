@@ -142,6 +142,7 @@ def main():
     mouse_pressed_down = False
     button_pressed_down = False
     sd_last_pos = None  # stable diffusion
+    color_button_pressed = False
 
     if os.path.exists("result.png"):
         os.remove("result.png")
@@ -239,7 +240,12 @@ def main():
 
                     if blackboard_fn is plugin.blackboard.none:
                         blackboard_fn = blackboard_fn_backup
+                    if color_button_pressed == False:
+                        plugin.blackboard.choose_color(debug_image, landmark_list[8] if detected_hand else [0, 0])
+                        color_button_pressed = True
                 else:
+                    if(color_button_pressed == True):
+                        color_button_pressed = False
                     if mouse_pressed_down:
                         plugin.mouse.mouse_up()
                         mouse_pressed_down = False
@@ -282,7 +288,7 @@ def main():
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.draw_all_buttons(debug_image)
         plugin.blackboard.print_history(debug_image)
-        plugin.blackboard.choose_color(landmark_list[8] if detected_hand else [0, 0])
+       
         plugin.mouse.print_touchboard(debug_image)
         plugin.stablediffusion.render_image_overlay(debug_image, sd_last_pos)
 
