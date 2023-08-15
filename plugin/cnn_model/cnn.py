@@ -51,13 +51,15 @@ def prepare_data(image_label_mapping, target_size):
     # Encode the labels numerically
     unique_labels = np.unique(labels)
     label_to_category = {label: category for category, label in enumerate(unique_labels)}
+    # print(label_to_category)
     categories = np.array([label_to_category[label] for label in labels])
     categories = to_categorical(categories)  # Convert labels into one-hot encoding
 
     return images, categories
 
-images_folder = 'dataCNN'
-json_path = 'cnn_labels.json'
+
+images_folder = 'plugin/cnn_model/dataCNN'
+json_path = 'plugin/cnn_model/cnn_labels.json'
 target_size = (224, 224)
 
 json_data = load_json(json_path)
@@ -65,6 +67,8 @@ json_data = load_json(json_path)
 image_label_mapping = associate_images_with_labels(images_folder, json_data)
 
 images, labels = prepare_data(image_label_mapping, target_size)
+
+# print(labels)
 
 train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2, random_state=42)
 
@@ -83,14 +87,15 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dropout(0.3),
     tf.keras.layers.Dense(units=64, activation='relu'),
     tf.keras.layers.Dropout(0.3),
-    tf.keras.layers.Dense(units=3, activation='softmax'),
+    tf.keras.layers.Dense(units=3, activation='softmax'), # 3 units: ellipse, rectangle, triangle
 ])
 
 opt = keras_legacy_optimizer.Adam(learning_rate=0.001)
 
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
-epochs = 1
+# epochs = 12
+epochs = 4
 batch_size = 32
 
 history = model.fit(train_images, train_labels, batch_size=batch_size, epochs=epochs)
@@ -101,6 +106,18 @@ test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print("Test Loss:", test_loss)
 print("Test Accuracy:", test_accuracy)
 
-model.save("../Desktop/model.keras", save_format='keras')
+model.save("plugin/cnn_model/model.keras", save_format='keras')
 
 
+# Making prdictions based on the image
+# labels = {0: 'Ellipse', 1: 'Rectangle', 2:'Triangle'}
+#
+# path = 'test.png'
+# input_data = Image.open(path).resize(target_size)
+# input_data = input_data.convert('RGB')
+# input_data = np.array(input_data) / 255.0
+# input_data = np.expand_dims(input_data, axis=0)  # Add a batch dimension
+# print(input_data.shape)
+# prediction = model.predict(input_data)
+# prediction = np.argmax(prediction) # find the highest probability
+# print(labels[prediction])
