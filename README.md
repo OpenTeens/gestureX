@@ -13,7 +13,7 @@ This repository contains the following contents.
     * mediapipe 0.8.1
     * OpenCV 3.4.2 or Later
     * Tensorflow 2.3.0 or Later<br>tf-nightly 2.5.0.dev or later (Only when creating a TFLite for an LSTM model)
-* scikit-learn 0.23.2 or Later (Only if you want to display the confusion matrix)
+* scikit-learn 0.23.2 or Later (Only if you want to display the confusion matrix) 
 * matplotlib 3.3.2 or Later (Only if you want to display the confusion matrix)
 * pyautogui 0.9.54 or Later
 
@@ -29,9 +29,9 @@ The following options can be specified when running the demo.
 * --height<br>Height at the time of camera capture (Default：540)
 * --use_static_image_mode<br>Whether to use static_image_mode option for MediaPipe inference (Default：Unspecified)
 * --min_detection_confidence<br>
-  Detection confidence threshold (Default：0.5)
+Detection confidence threshold (Default：0.5)
 * --min_tracking_confidence<br>
-  Tracking confidence threshold (Default：0.5)
+Tracking confidence threshold (Default：0.5)
 * --function to be enabled
 * --max_num of hands detected
 
