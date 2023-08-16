@@ -219,6 +219,13 @@ def print_history(image):
         last_h = h
 
     # process shapes
+    draw_shapes(image)
+
+
+def draw_shapes(image):
+    if disabled:
+        return "DISABLED"
+
     for pos, shape_name, paras in history_shapes:
         p1, p2 = pos
         if shape_name == "rectangle":
@@ -355,6 +362,7 @@ def export(mode=0):
         last_h = h
         # cv: blue, green, red
     if mode == 1:
+        draw_shapes(image)  # draw special shaped
         return image, p1
     if mode == 0:
         return image, origin_p1, origin_p2
