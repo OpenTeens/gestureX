@@ -6,12 +6,14 @@ import os
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D, BatchNormalization, Input, Activation, Reshape
+from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D, BatchNormalization, Input, \
+    Activation, Reshape
 from tensorflow.keras.optimizers import legacy as keras_legacy_optimizer
 from tensorflow.keras.layers import Reshape
 import tensorflow as tf
 from tensorflow import keras
 import pickle
+
 
 def preprocess_image(image_path, target_size):
     image = Image.open(image_path)
@@ -25,6 +27,7 @@ def load_json(json_path):
     with open(json_path, 'r') as f:
         json_data = json.load(f)
     return json_data
+
 
 def associate_images_with_labels(images_folder, json_data):
     image_label_mapping = {}
@@ -72,7 +75,6 @@ images, labels = prepare_data(image_label_mapping, target_size)
 
 train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2, random_state=42)
 
-
 model = tf.keras.Sequential([
     tf.keras.layers.Conv2D(filters=64, kernel_size=7, input_shape=[224, 224, 3]),
     tf.keras.layers.MaxPooling2D(pool_size=2),
@@ -87,7 +89,7 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dropout(0.3),
     tf.keras.layers.Dense(units=64, activation='relu'),
     tf.keras.layers.Dropout(0.3),
-    tf.keras.layers.Dense(units=3, activation='softmax'), # 3 units: ellipse, rectangle, triangle
+    tf.keras.layers.Dense(units=3, activation='softmax'),  # 3 units: ellipse, rectangle, triangle
 ])
 
 opt = keras_legacy_optimizer.Adam(learning_rate=0.001)
@@ -107,7 +109,6 @@ print("Test Loss:", test_loss)
 print("Test Accuracy:", test_accuracy)
 
 model.save("plugin/cnn_model/model.keras", save_format='keras')
-
 
 # Making prdictions based on the image
 # labels = {0: 'Ellipse', 1: 'Rectangle', 2:'Triangle'}
