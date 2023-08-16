@@ -61,20 +61,23 @@ def prepare_data(image_label_mapping, target_size):
     return images, categories
 
 
+# read the data from the folder
 images_folder = 'plugin/cnn_model/dataCNN'
 json_path = 'plugin/cnn_model/cnn_labels.json'
-target_size = (224, 224)
+target_size = (224, 224) # size of the reshape
 
 json_data = load_json(json_path)
 
+# preprocess data
 image_label_mapping = associate_images_with_labels(images_folder, json_data)
-
 images, labels = prepare_data(image_label_mapping, target_size)
 
 # print(labels)
 
+# split data set into training and testing data sets
 train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2, random_state=42)
 
+# building the model: CNN with convolution layer, pooling, and dense
 model = tf.keras.Sequential([
     tf.keras.layers.Conv2D(filters=64, kernel_size=7, input_shape=[224, 224, 3]),
     tf.keras.layers.MaxPooling2D(pool_size=2),
@@ -86,17 +89,17 @@ model = tf.keras.Sequential([
     tf.keras.layers.MaxPooling2D(pool_size=2),
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(units=128, activation='relu'),
-    tf.keras.layers.Dropout(0.3),
+    tf.keras.layers.Dropout(0.3), # data dropout
     tf.keras.layers.Dense(units=64, activation='relu'),
     tf.keras.layers.Dropout(0.3),
-    tf.keras.layers.Dense(units=3, activation='softmax'),  # 3 units: ellipse, rectangle, triangle
+    tf.keras.layers.Dense(units=3, activation='softmax'),
+    # output layer: labels = {0: 'Ellipse', 1: 'Rectangle', 2: 'Triangle'}
 ])
 
 opt = keras_legacy_optimizer.Adam(learning_rate=0.001)
 
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
-# epochs = 12
 epochs = 4
 batch_size = 32
 
@@ -110,15 +113,3 @@ print("Test Accuracy:", test_accuracy)
 
 model.save("plugin/cnn_model/model.keras", save_format='keras')
 
-# Making prdictions based on the image
-# labels = {0: 'Ellipse', 1: 'Rectangle', 2:'Triangle'}
-#
-# path = 'test.png'
-# input_data = Image.open(path).resize(target_size)
-# input_data = input_data.convert('RGB')
-# input_data = np.array(input_data) / 255.0
-# input_data = np.expand_dims(input_data, axis=0)  # Add a batch dimension
-# print(input_data.shape)
-# prediction = model.predict(input_data)
-# prediction = np.argmax(prediction) # find the highest probability
-# print(labels[prediction])
