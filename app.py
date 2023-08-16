@@ -27,6 +27,7 @@ import itertools
 from collections import Counter
 # 实现了两端都可以操作的队列，相当于双端队列
 from collections import deque
+import time
 
 import cv2 as cv
 import numpy as np
@@ -148,6 +149,9 @@ def main():
     if os.path.exists("result.png"):
         os.remove("result.png")
 
+    last_stay_time = time.time()
+    last_stay_pos = (0, 0)
+
     while True:
         fps = cvFpsCalc.get()
 
@@ -165,25 +169,6 @@ def main():
             plugin.blackboard.delete_last_trace()
         if key == 27:  # ESC
             break
-        if key == ord('p'):  # p for pen
-            blackboard_fn_backup = blackboard_fn = plugin.blackboard.pen
-        if key == ord('e'):  # e for eraser
-            blackboard_fn_backup = blackboard_fn = plugin.blackboard.erase
-        if key == ord('c'):  # c for clear
-            plugin.blackboard.clear()
-            plugin.stablediffusion.clear()
-            blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
-        if key == ord('d'):  # d for diffusion
-            img, sd_last_pos = plugin.blackboard.export(1)
-            cv.imwrite("sd_input.png", img)
-            plugin.stablediffusion.generate_image()
-        if key == ord('s'):  # s for shape-reco
-            res = plugin.blackboard.export(0)
-            if isinstance(res, tuple):
-                img, p1, p2 = res
-                cv.imwrite("plugin/cnn_model/cnn_input.png", img)
-                plugin.blackboard.delete_last_trace()
-                plugin.cnn_model.load_model.generate_shape(plugin.blackboard.history_paras[-2], p1, p2)
 
         number, mode = select_mode(key, mode)
 
@@ -206,7 +191,6 @@ def main():
                 # plugin
                 blackboard_fn(landmark_list[8])  # finger No.8
                 clicked_key = plugin.keyboard.check_on_keys(landmark_list[8])
-
                 # 转换为相对坐标 & 归一化
                 pre_processed_landmark_list = pre_process_landmark(landmark_list)
                 pre_processed_point_history_list = pre_process_point_history(debug_image, point_history)
@@ -221,21 +205,45 @@ def main():
 
                 plugin.mouse.move_to(landmark_list[8])
 
+                # shape reco plugin
+                if plugin.blackboard.distance(last_stay_pos, landmark_list[8]) >= 10 ** 2 or hand_sign_id != 4:
+                    # moved or released, reset.
+                    last_stay_time = time.time()
+                    last_stay_pos = tuple(landmark_list[8])
+                elif time.time() - last_stay_time >= 0.5:
+                    # stayed for 1s, shape reco.
+                    res = plugin.blackboard.export(0)
+                    if isinstance(res, tuple):
+                        img, p1, p2 = res
+                        cv.imwrite("plugin/cnn_model/cnn_input.png", img)
+                        plugin.blackboard.delete_last_trace()
+                        plugin.cnn_model.load_model.generate_shape(plugin.blackboard.history_paras[-2], p1, p2)
+                # print(time.time() - last_stay_time)
+
                 if hand_sign_id == 4:  # 4: click
                     if not button_pressed_down:
                         button, check_button, status = plugin.UI.check_on_buttons(landmark_list[8], debug_image)
-                        if status is True:
-                            status = False
-                        else:
-                            status = True
+                        status = not status
 
                         if check_button:
                             if button == 'blackboard':
                                 plugin.blackboard.disable(status)
                             elif button == 'mouse':
                                 plugin.mouse.disable(status)
-                            else:
+                            elif button == 'keyboard':
                                 plugin.keyboard.disable(status)
+                            elif button == 'stablediff':
+                                if status is False:
+                                    # enable sd (run)
+                                    res = plugin.blackboard.export(1)
+                                    if res:
+                                        img, sd_last_pos = res
+                                        cv.imwrite("sd_input.png", img)
+                                        plugin.stablediffusion.generate_image()
+                                else:
+                                    # disable sd (clear)
+                                    plugin.stablediffusion.plugin.stablediffusion.clear()
+
                         button_pressed_down = True
 
                     if mouse_pressed_down is False:
@@ -247,16 +255,15 @@ def main():
 
                     if blackboard_fn is plugin.blackboard.none:
                         blackboard_fn = blackboard_fn_backup
-                    if color_button_pressed == False:
+                    if color_button_pressed is False:
                         plugin.blackboard.choose_color(debug_image, landmark_list[8] if detected_hand else [0, 0])
                         color_button_pressed = True
                 else:
-                    if (color_button_pressed == True):
+                    if color_button_pressed is True:
                         color_button_pressed = False
                     if mouse_pressed_down:
                         plugin.mouse.mouse_up()
                         mouse_pressed_down = False
-
                     if button_pressed_down:
                         button_pressed_down = False
 
