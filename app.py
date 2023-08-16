@@ -161,26 +161,29 @@ def main():
         # 按键处理(ESC：终止) #################################################
         key = cv.waitKey(10)
 
-        if 49 <= key <= 58:
-            plugin.blackboard.changeThickness(key)
+        if key == 26:
+            plugin.blackboard.delete_last_trace()
         if key == 27:  # ESC
             break
-        if key == 112:  # p for pen
+        if key == ord('p'):  # p for pen
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.pen
-        if key == 101:  # e for eraser
+        if key == ord('e'):  # e for eraser
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.erase
-        if key == 99:  # c for clear
+        if key == ord('c'):  # c for clear
             plugin.blackboard.clear()
             plugin.stablediffusion.clear()
             blackboard_fn_backup = blackboard_fn = plugin.blackboard.none
-        if key == 100:  # d for diffusion
+        if key == ord('d'):  # d for diffusion
             img, sd_last_pos = plugin.blackboard.export(1)
             cv.imwrite("sd_input.png", img)
             plugin.stablediffusion.generate_image()
-        if key == 83: # s for shape
-            img, sd_last_pos = plugin.blackboard.export(1)
-            cv.imwrite("cnn_input.png", img)
-            plugin.cnn_model.load_model.generate_shape()
+        if key == ord('s'):  # s for shape-reco
+            res = plugin.blackboard.export(0)
+            if isinstance(res, tuple):
+                img, p1, p2 = res
+                cv.imwrite("plugin/cnn_model/cnn_input.png", img)
+                plugin.blackboard.delete_last_trace()
+                plugin.cnn_model.load_model.generate_shape(plugin.blackboard.history_paras[-2], p1, p2)
 
         number, mode = select_mode(key, mode)
 
@@ -248,7 +251,7 @@ def main():
                         plugin.blackboard.choose_color(debug_image, landmark_list[8] if detected_hand else [0, 0])
                         color_button_pressed = True
                 else:
-                    if(color_button_pressed == True):
+                    if (color_button_pressed == True):
                         color_button_pressed = False
                     if mouse_pressed_down:
                         plugin.mouse.mouse_up()

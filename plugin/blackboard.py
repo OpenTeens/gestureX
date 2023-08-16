@@ -14,6 +14,7 @@ GRID_HEIGHT = (SCREEN_HEIGHT // GRID_SIZE) + 1
 disabled = False
 history = []
 history_paras = []
+history_shapes = []
 grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
 pen_color = (0, 225, 0)
 thickness = 3
@@ -182,13 +183,6 @@ def choose_color(debug_image, pos):
     return pen
 
 
-def changeThickness(key):
-    if disabled:
-        return "DISABLED"
-    global thickness
-    thickness = int(chr(key))
-
-
 def print_history(image):
     """
     Print pen trace on screen.
@@ -199,6 +193,7 @@ def print_history(image):
     if disabled:
         return "DISABLED"
 
+    # process pen trace
     last_h = None
     for i in range(len(history)):
         h = history[i]
@@ -222,6 +217,29 @@ def print_history(image):
             # change the color of the open
             cv.line(image, tuple(last_h), tuple(h), paras[0], thickness)
         last_h = h
+
+    # process shapes
+    draw_shapes(image)
+
+
+def draw_shapes(image):
+    if disabled:
+        return "DISABLED"
+
+    for pos, shape_name, paras in history_shapes:
+        p1, p2 = pos
+        if shape_name == "rectangle":
+            cv.rectangle(image, p1, p2, paras[0], thickness)
+        elif shape_name == "triangle":
+            A = ((p1[0] + p2[0]) // 2, p1[1])
+            B = (p1[0], p2[1])
+            C = p2
+            cv.line(image, A, B, paras[0], thickness)
+            cv.line(image, B, C, paras[0], thickness)
+            cv.line(image, C, A, paras[0], thickness)
+        elif shape_name == "ellipse":
+            cv.ellipse(image, ((p1[0] + p2[0]) // 2, (p1[1] + p2[1]) // 2),
+                       ((p2[0] - p1[0]) // 2, (p2[1] - p1[1]) // 2), 0, 0, 360, paras[0], thickness)
 
 
 def erase(pos, radius=15):
@@ -256,9 +274,10 @@ def clear():
     if disabled:
         return "DISABLED"
 
-    global history, grid, history_paras
+    global history, grid, history_paras, history_shapes
     history = []
     history_paras = []
+    history_shapes = []
     grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
 
 
@@ -276,7 +295,7 @@ def export(mode=0):
     if mode == 0:
         # generate last trace
         pen_start_index = 0
-        for i in range(len(history) - 1, -1, -1):
+        for i in range(len(history) - 2, -1, -1):  # except last item which is definitely [None, None]
             if history[i][0] is None:
                 pen_start_index = i + 1
                 break
@@ -303,7 +322,10 @@ def export(mode=0):
         p2[0] = max(p2[0], h[0])
         p2[1] = max(p2[1], h[1])
 
-    # Calculate image size.
+    origin_p1 = tuple(p1)
+    origin_p2 = tuple(p2)
+
+    # Calculate image size, padding: 20px.
     p1[0] = max(0, p1[0] - 20)
     p1[1] = max(0, p1[1] - 20)
     p2[0] = min(SCREEN_WIDTH, p2[0] + 20)
@@ -336,13 +358,17 @@ def export(mode=0):
             last_h = h
             continue
 
-        cv.line(image, last_h, h, paras[0], 3)  # draw line (black)
+        cv.line(image, last_h, h, paras[0] if mode == 1 else (0, 0, 0), 3)  # draw line (black if mode=0)
         last_h = h
         # cv: blue, green, red
-    return image, p1
+    if mode == 1:
+        draw_shapes(image)  # draw special shaped
+        return image, p1
+    if mode == 0:
+        return image, origin_p1, origin_p2
 
 
-def save(mode=0):
+def save(mode=0, fname="output.png"):
     """
     Save image to file.
     :return: None
@@ -350,4 +376,26 @@ def save(mode=0):
     if disabled:
         return "DISABLED"
 
-    cv.imwrite("output.png", export(mode)[0])
+    img = export(mode)[0]
+    if img is not None:
+        cv.imwrite(fname, img)
+    else:
+        return "NO PENTRACE"
+
+
+def delete_last_trace():
+    """
+    Delete last pen trace.
+    :return: None
+    """
+    if disabled:
+        return "DISABLED"
+
+    global history, history_paras
+    start_index = 0
+    for i in range(len(history) - 2, -1, -1):  # except last item which is definitely [None, None]
+        if history[i][0] is None:
+            start_index = i + 1
+            break
+    history = history[:start_index]
+    history_paras = history_paras[:start_index]
