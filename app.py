@@ -291,6 +291,7 @@ def main():
         debug_image = draw_info(debug_image, fps, mode, number)
 
         # plugin显示 #############################################################
+        plugin.stablediffusion.render_image_overlay(debug_image, sd_last_pos)
         plugin.UI.buttons(debug_image)
         plugin.keyboard.print_rec(debug_image)  # keyboard plugin
         plugin.blackboard.draw_all_buttons(debug_image)
@@ -299,7 +300,6 @@ def main():
         if activated_f:
             blackboard_fn_backup = blackboard_fn = activated_f
         plugin.mouse.print_touchboard(debug_image)
-        plugin.stablediffusion.render_image_overlay(debug_image, sd_last_pos)
 
         # 显示画面 #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)

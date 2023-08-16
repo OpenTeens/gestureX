@@ -56,6 +56,7 @@ def generate_image():
             else:
                 print(response.status_code)
             generating_image = False
+            plugin.blackboard.clear()
 
         window = tk.Tk()
         window.title("stable diffusion关键词输入")
