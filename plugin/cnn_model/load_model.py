@@ -28,8 +28,7 @@ def generate_shape(paras, p1, p2):
     prediction = model.predict(input_data)
     prediction = np.argmax(prediction)  # find the highest probability
 
-<<<<<<< HEAD
     print(labels[prediction])
-=======
+
     plugin.blackboard.history_shapes.append([(p1, p2), labels[prediction].lower(), paras])
->>>>>>> bf003e4eafb648f9ad945f4a87eab03dae7c6a17
+
