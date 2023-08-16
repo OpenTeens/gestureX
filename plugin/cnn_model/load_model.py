@@ -20,5 +20,4 @@ def generate_shape():
     prediction = model.predict(input_data)
     prediction = np.argmax(prediction) # find the highest probability
 
-    #
     print(labels[prediction])
