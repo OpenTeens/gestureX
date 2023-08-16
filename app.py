@@ -236,7 +236,7 @@ def main():
                                 if status is False:
                                     # enable sd (run)
                                     res = plugin.blackboard.export(1)
-                                    if res:
+                                    if isinstance(res, tuple):
                                         img, sd_last_pos = res
                                         cv.imwrite("sd_input.png", img)
                                         plugin.stablediffusion.generate_image()
