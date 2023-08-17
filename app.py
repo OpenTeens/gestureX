@@ -210,8 +210,8 @@ def main():
                     # moved or released, reset.
                     last_stay_time = time.time()
                     last_stay_pos = tuple(landmark_list[8])
-                elif time.time() - last_stay_time >= 0.5:
-                    # stayed for 1s, shape reco.
+                elif time.time() - last_stay_time >= 0.75 and blackboard_fn is plugin.blackboard.pen:
+                    # stayed for 0.75s, shape reco.
                     res = plugin.blackboard.export(0)
                     if isinstance(res, tuple):
                         img, p1, p2 = res
