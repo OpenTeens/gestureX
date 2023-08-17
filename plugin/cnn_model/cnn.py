@@ -14,7 +14,7 @@ import tensorflow as tf
 from tensorflow import keras
 import pickle
 
-
+# Resizing and normalization of image,
 def preprocess_image(image_path, target_size):
     image = Image.open(image_path)
     image = image.resize(target_size)
@@ -22,13 +22,12 @@ def preprocess_image(image_path, target_size):
     image = np.array(image) / 255.0
     return image
 
-
 def load_json(json_path):
     with open(json_path, 'r') as f:
         json_data = json.load(f)
     return json_data
 
-
+# create mapping of picture and label
 def associate_images_with_labels(images_folder, json_data):
     image_label_mapping = {}
     for item in json_data:
@@ -60,7 +59,6 @@ def prepare_data(image_label_mapping, target_size):
 
     return images, categories
 
-
 # read the data from the folder
 images_folder = 'plugin/cnn_model/dataCNN'
 json_path = 'plugin/cnn_model/cnn_labels.json'
@@ -78,7 +76,7 @@ images, labels = prepare_data(image_label_mapping, target_size)
 train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2, random_state=42)
 
 # building the model: CNN with convolution layer, pooling, and dense
-model = tf.keras.Sequential([
+model = tf.keras.Sequential([                                   # size of image and RGB
     tf.keras.layers.Conv2D(filters=64, kernel_size=7, input_shape=[224, 224, 3]),
     tf.keras.layers.MaxPooling2D(pool_size=2),
     tf.keras.layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding="SAME"),
@@ -93,16 +91,18 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(units=64, activation='relu'),
     tf.keras.layers.Dropout(0.3),
     tf.keras.layers.Dense(units=3, activation='softmax'),
-    # output layer: labels = {0: 'Ellipse', 1: 'Rectangle', 2: 'Triangle'}
+    # output layer: 3 labels = {0: 'Ellipse', 1: 'Rectangle', 2: 'Triangle'}
 ])
 
 opt = keras_legacy_optimizer.Adam(learning_rate=0.001)
 
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
+# since the size of the data is not giant, if we ran more epochs, we can cause overfitting
 epochs = 4
 batch_size = 32
 
+# training of the model
 history = model.fit(train_images, train_labels, batch_size=batch_size, epochs=epochs)
 
 print(history)
@@ -111,5 +111,6 @@ test_loss, test_accuracy = model.evaluate(test_images, test_labels)
 print("Test Loss:", test_loss)
 print("Test Accuracy:", test_accuracy)
 
+# saving the model so we don't have to train everytime
 model.save("plugin/cnn_model/model.keras", save_format='keras')
 
