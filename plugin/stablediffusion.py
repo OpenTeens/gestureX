@@ -59,7 +59,7 @@ def generate_image():
             plugin.blackboard.clear()
 
         window = tk.Tk()
-        window.title("stable diffusion关键词输入")
+        window.title("SD - gestureX")
 
         input_entry = tk.Entry(window, width=10)
         input_entry.grid(row=0, column=0)
