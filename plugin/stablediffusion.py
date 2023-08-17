@@ -60,13 +60,12 @@ def generate_image():
 
         window = tk.Tk()
         window.title("stable diffusion关键词输入")
-        input_entry = tk.Entry(window, width=40)
-        input_entry.pack()
-        submit_button = tk.Button(window, width=10, height=3, text="Submit", command=gen_img)
-        clear_button = tk.Button(window, width=10, height=3, text="Clear",
-                                 command=lambda: input_entry.delete(0, tk.END))
-        submit_button.pack()
-        clear_button.pack()
+
+        input_entry = tk.Entry(window, width=10)
+        input_entry.grid(row=0, column=0)
+        tk.Button(window, width=10, height=1, text="Submit", command=gen_img).grid(row=1, column=0)
+        tk.Button(window, width=10, height=1, text="Clear", command=lambda: input_entry.delete(0, tk.END)).grid(row=1,
+                                                                                                                  column=1)
         window.mainloop()
 
     generating_image = True

@@ -26,6 +26,13 @@ def generate_shape(paras, p1, p2):
     input_data = np.array(input_data) / 255.0
     input_data = np.expand_dims(input_data, axis=0)  # Add a batch dimension
     prediction = model.predict(input_data)
+    probability = np.max(prediction)  # find the highest probability
     prediction = np.argmax(prediction)  # find the highest probability
 
+    if probability < 0.8:
+        print("Shape-Reco: Other Shapes")
+        return "Other Shapes"
+
+    plugin.blackboard.delete_last_trace()
+    print("Shape-Reco:", labels[prediction])
     plugin.blackboard.history_shapes.append([(p1, p2), labels[prediction].lower(), paras])

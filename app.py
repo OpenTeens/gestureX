@@ -216,9 +216,10 @@ def main():
                     if isinstance(res, tuple):
                         img, p1, p2 = res
                         cv.imwrite("plugin/cnn_model/cnn_input.png", img)
-                        plugin.blackboard.delete_last_trace()
                         plugin.cnn_model.load_model.generate_shape(plugin.blackboard.history_paras[-2], p1, p2)
-                # print(time.time() - last_stay_time)
+                        # then, reset.
+                        last_stay_time = time.time()
+                        last_stay_pos = tuple(landmark_list[8])
 
                 if hand_sign_id == 4:  # 4: click
                     if not button_pressed_down:
