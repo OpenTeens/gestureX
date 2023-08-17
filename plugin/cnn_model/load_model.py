@@ -1,3 +1,10 @@
+'''
+Load Model: (Step 4)
+- 从 model.keras 加载模型
+- 识别出 cnn_input.png 的图形，并且生成对应形状。
+'''
+
+
 from tensorflow import keras
 from PIL import Image
 import numpy as np

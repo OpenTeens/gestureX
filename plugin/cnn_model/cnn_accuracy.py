@@ -1,3 +1,8 @@
+'''
+CNN Accuracy:
+- 看CNN accuracy
+'''
+
 from tensorflow import keras
 import cnn
 import json
