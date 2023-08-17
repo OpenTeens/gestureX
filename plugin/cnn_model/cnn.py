@@ -1,3 +1,11 @@
+'''
+CNN: (Step 3)
+- 处理 data (从Json取出数据，接着处理数据）
+- CNN 模型
+- 模型training和testing
+- save 模型
+'''
+
 import json
 import numpy as np
 from PIL import Image
@@ -14,7 +22,7 @@ import tensorflow as tf
 from tensorflow import keras
 import pickle
 
-# Resizing and normalization of image,
+# Resizing and normalization of image
 def preprocess_image(image_path, target_size):
     image = Image.open(image_path)
     image = image.resize(target_size)
