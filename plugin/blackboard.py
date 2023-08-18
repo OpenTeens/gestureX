@@ -19,6 +19,16 @@ grid = [[[] for _ in range(GRID_HEIGHT)] for _ in range(GRID_WIDTH)]
 pen_color = (0, 225, 0)
 thickness = 3
 
+choices = ["Clear", "Purple", "Blue", "Green", "Red", "Yellow", "Pink", "Eraser"]
+colors = {
+    "Purple": (255, 0, 255),
+    "Blue": (255, 0, 0),
+    "Green": (0, 255, 0),
+    "Red": (0, 0, 255),
+    "Yellow": (0, 255, 255),
+    "Pink": (203, 192, 255)
+}
+
 
 def disable(d):
     global disabled
@@ -82,20 +92,7 @@ def draw_color(color):
         return "DISABLED"
 
     # blue, green red
-    if color == "Purple":
-        return (255, 0, 255)
-    elif color == "Blue":
-        return (255, 0, 0)
-    elif color == "Green":
-        return (0, 255, 0)
-    elif color == "Red":
-        return (0, 0, 255)
-    elif color == "Yellow":
-        return (0, 255, 255)
-    elif color == "Pink":
-        return (203, 192, 255)
-    elif color == "Eraser":
-        return (0, 0, 0)
+    return colors.get(color, (0, 0, 0))
 
 
 def draw_button(image, y, color):
@@ -124,13 +121,8 @@ def draw_all_buttons(image):
     if disabled:
         return "DISABLED"
 
-    draw_button(image, 150, "Purple")
-    draw_button(image, 200, "Blue")
-    draw_button(image, 250, "Green")
-    draw_button(image, 300, "Red")
-    draw_button(image, 350, "Yellow")
-    draw_button(image, 400, "Pink")
-    draw_button(image, 450, "Eraser")
+    for i in range(len(choices)):
+        draw_button(image, 100 + i * 50, choices[i])
 
 
 def inRect(x, y, left_top, right_bottom):
@@ -164,6 +156,8 @@ def choose_color(debug_image, pos):
     x, y = pos
 
     # blue, green red
+    if inRect(x, y, (50, 100), (170, 100 + 50)):
+        return lambda _: clear()
     if inRect(x, y, (50, 150), (170, 150 + 50)):
         pen_color = (255, 0, 255)
     elif inRect(x, y, (50, 200), (170, 200 + 50)):
